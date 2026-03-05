@@ -1,0 +1,127 @@
+﻿@using Z4.Bibliotecas
+@model PaginacaoModel<UsuarioModel>
+
+@{
+    int janela = 2;
+    int inicio = Math.Max(1, Model.PaginaAtual - janela);
+    int fim = Math.Min(Model.TotalPaginas, Model.PaginaAtual + janela);
+}
+
+@if (Model.Dados.Count() <= 0)
+{
+    @await Component.InvokeAsync("TabelaSemRegistros")
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td class="text-center col-2">Nome Completo</td>
+                <td class="text-center col-2">Telefone</td>
+                <td class="text-center col-1">Idade</td>
+                @if (Model.Dados.Any(x => x.SituacaoID != null))
+                {
+                    <td class="text-center col-1">Situação</td>
+                }
+                <td class="text-center col-2">Endereço</td>
+                <td class="text-center col-1">Bairro</td>
+                <td class="text-center col-1">Editar</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var pessoa in Model.Dados)
+            {
+                <tr class="lista-hover">
+                    <td class="text-start align-middle" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.NomeCompleto</td>
+                    <td class="text-center align-middle" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.Telefone.FormatarTelefone()</td>
+                    <td class="text-center align-middle" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.DataNascimento.CalcularIdadeString()</td>
+                    @if (Model.Dados.Any(x => x.SituacaoID != null))
+                    {
+                        <td class="text-center align-middle" onclick="abrirModal(@pessoa.PessoaID)"><span class="@pessoa.SituacaoCor">@pessoa.Situacao</span></td>
+                    }
+                    <td class="text-start align-middle" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.Enderecos.FirstOrDefault(x => x.TipoID == 1)?.EnderecoReduzido</td>
+                    <td class="text-center align-middle" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.Enderecos.FirstOrDefault()?.Bairro</td>
+                    <td class="p-1 m-0 align-middle text-center align-middle">
+                        <div class="d-flex gap-1 justify-content-center align-middle">
+                            <a asp-controller="Usuario" asp-action="Editar" asp-route-pessoaId="@pessoa.PessoaID" class="btn btn-secondary btn-sm">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                            @if (this.User.GetUserTipoId() < 3)
+                            {
+                                <form id="form-deletar" class="col-1">
+                                    <input type="hidden" name="id" value="@pessoa.PessoaID" />
+
+                                    <button type="submit" class="btn btn-danger btn-sm btn-deletar">
+                                        <i class="fas fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<nav aria-label="Paginação" class="border-top pt-3">
+    <ul class="pagination justify-content-end">
+
+        <li class="page-item @(Model.PaginaAtual == 1 ? "disabled" : "")">
+            <a class="page-link" href="#"
+               onclick="carregarTabela(@(Model.PaginaAtual - 1))">
+                Anterior
+            </a>
+        </li>
+
+        @if (inicio > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="carregarTabela(1)">1</a>
+            </li>
+
+            @if (inicio > 2)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            }
+        }
+
+        @for (int i = inicio; i <= fim; i++)
+        {
+            <li class="page-item @(i == Model.PaginaAtual ? "active" : "")">
+                <a class="page-link" href="#" onclick="carregarTabela(@i)">
+                    @i
+                </a>
+            </li>
+        }
+
+        @if (fim < Model.TotalPaginas)
+        {
+            @if (fim < Model.TotalPaginas - 1)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            }
+
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="carregarTabela(@Model.TotalPaginas)">
+                    @Model.TotalPaginas
+                </a>
+            </li>
+        }
+
+        <li class="page-item @(Model.PaginaAtual == Model.TotalPaginas ? "disabled" : "")">
+            <a class="page-link" href="#"
+               onclick="carregarTabela(@(Model.PaginaAtual + 1))">
+                Próxima
+            </a>
+        </li>
+
+    </ul>
+</nav>

@@ -1,0 +1,60 @@
+﻿@model List<EnderecoModel>
+
+@{
+    bool podeExcluir = ViewBag.Deletar;
+}
+
+<div class="row bg-secondary-subtle align-middle py-2">
+    <div class="col-10 text-center fs-5 my-auto">
+        Endereços
+    </div>
+    @if (podeExcluir)
+    {
+        <div class="col-2 text-end">
+            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEndereco">
+                Novo Endereço
+            </button>
+        </div>
+    }
+</div>
+<table class="table table-striped table-bordered border-light-subtle mb-0">
+    <thead>
+        <tr>
+            <td class="text-center">Endereço Completo</td>
+            <td class="text-center">CEP</td>
+            <td class="text-center">Tipo</td>
+            <td class="text-center"></td>
+        </tr>
+    </thead>
+
+    @foreach (var endereco in Model)
+    {
+        var enderecoCompleto = $"{endereco.Rua}, {endereco.Numero}, {endereco.Bairro}, {endereco.Cidade} - {endereco.Estado}, {endereco.CEP}";
+        var enderecoEncoded = Uri.EscapeDataString(enderecoCompleto);
+        var url = $"https://www.google.com/maps/search/?api=1&query={enderecoEncoded}";
+
+        <tr>
+            <td class="p-1 text-start align-middle">@endereco.EnderecoCompleto</td>
+            <td class="p-1 text-center align-middle col-2">@endereco.CEP.FormatarCEP()</td>
+            <td class="p-1 text-start align-middle col-1">@endereco.Tipo</td>
+            @if (podeExcluir)
+            {
+                <td class="px-3 text-end align-middle">
+                    <form asp-action="DeletarEndereco" asp-controller="Usuario" asp-route-enderecoId="@endereco.ID" asp-route-pessoaId="@endereco.PessoaID">
+                        <button type="submit" class="btn btn-danger btn-sm btn-deletar">
+                            <i class="fas fa-trash-can"></i>
+                        </button>
+                    </form>
+                </td>
+            }
+            else
+            {
+                <td class="px-3 m-0 text-end align-middle">
+                    <a href="@url" target="_blank" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </a>
+                </td>
+            }
+        </tr>
+    }
+</table>

@@ -1,0 +1,31 @@
+﻿@model List<dynamic>
+
+<table id="tbl-generica" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            @if (Model.Any())
+            {
+                // Extrai as chaves (nomes das colunas) do primeiro objeto
+                var firstRow = (IDictionary<string, object>)Model.First();
+                foreach (var column in firstRow.Keys)
+                {
+                    <th>@column</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in Model)
+        {
+            var dictRow = (IDictionary<string, object>)row;
+            <tr>
+                @foreach (var value in dictRow.Values)
+                {
+                    string strConvertido = Convert.ToString(value);
+                    string strClass = "";//ExpressoesRegulares.AlinhamentoHTML(strConvertido);
+                    <td class="@strClass">@value</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

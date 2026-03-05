@@ -1,0 +1,92 @@
+﻿@model ChamadaCadastroModel
+
+@{
+    ViewData["Title"] = "Estudo em casa";
+
+    UsuarioModel professor = this.User.ObterUsuario();
+
+    UsuarioModel aluno = ViewBag.aluno;
+}
+
+<form method="post" id="form-cadastro" enctype="multipart/form-data">
+    <input type="hidden" name="ProjetoIndicacaoID" value="@aluno.ProjetoIndicacaoID">
+    <input type="hidden" asp-for="ProfessorID" value="@professor.PessoaID">
+    <input type="hidden" asp-for="PessoaID" value="@aluno.PessoaID">
+    <input type="hidden" asp-for="Estudo" value="@aluno.EstudoBiblico">
+
+    <div class="row gy-3">
+
+        <div class="col-12 col-sm-3">
+            <label for="@aluno.NomeCompleto">Aluno</label>
+            <input type="text" class="form-control" id="" value="@aluno.NomeCompleto" readonly disabled>
+        </div>
+
+        <div class="col-12 col-sm-3">
+            <label for="Projeto">Projeto Indicação</label>
+            <input type="text" class="form-control" id="" value="@aluno.Projeto" readonly disabled>
+        </div>
+
+        <!--  Presença, Cesta e Prof  -->
+        <div class="col-6 col-sm-2">
+            <label class="form-check-label" name="Presente">Recebeu estudo?</label>
+            <select name="Presente" id="Presente" class="form-select
+">
+                <option value="true">SIM</option>
+                <option value="false">NÃO</option>
+            </select>
+        </div>
+
+        <div class="col-6 col-sm-2">
+            <label class="form-check-label" asp-for="CestaBasica">Participa da Cesta Básica?</label>
+            <select asp-for="CestaBasica" class="form-select">
+                <option value="false">NÃO</option>
+                <option value="true">SIM</option>
+            </select>
+        </div>
+
+        <div class="col-6 col-sm-2">
+            <label asp-for="Licao">Lição</label>
+            <select asp-for="Licao" class="form-select" required>
+                <option disabled>LIÇÃO</option>
+                @await Html.PartialAsync("_DropLicoes", 31)
+            </select>
+        </div>
+
+        <div class="col-12 col-sm-4">
+            <label for="Professor">Professor</label>
+            <input type="text" class="form-control disabled" id="Professor" name="Professor" value="@professor.NomeCompleto">
+        </div>
+
+        <!--  Data, hora, Lição e Estudo  -->
+        <div class="col-6 col-sm-2">
+            <label for="">Data do Estudo</label>
+            <input type="date" class="form-control" name="DataEstudo" id="DataEstudo" placeholder="DD/MM/AAAA" required>
+        </div>
+
+        <div class="col-6 col-sm-2">
+            <label for="">Horário</label>
+            <input type="text" class="form-control time" id="" name="Horario" placeholder="00:00:00">
+        </div>
+
+        <div class="col-12 col-sm-4">
+            <label asp-for="EstudoID">Estudo Biblico</label>
+            <select asp-for="EstudoID" class="form-select">
+                <option disabled>SELECIONE</option>
+                @await Component.InvokeAsync("DropEstudos")
+            </select>
+        </div>
+
+    </div>
+
+    @await Component.InvokeAsync("FormFooter", new { action = "ChamadaEmCasa", controller = "Professor" })
+</form>
+
+@section Scripts {
+    <script>
+        $('#btnSalvar').on('click', async function (evt) {
+            evt.preventDefault();
+
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Formulario", "Professor")', btnSelector = '#btnSalvar')
+        });
+    </script>
+}

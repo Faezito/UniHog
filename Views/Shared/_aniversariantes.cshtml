@@ -1,0 +1,70 @@
+﻿@model List<UsuarioModel>
+
+@{
+    List<UsuarioModel> aniversariantesHoje = Model.Where(x => x.DataNascimento.Day == DateTime.Now.Day).OrderBy(x => x.DataNascimento).ToList();
+    List<UsuarioModel> aniversariantesAnteriores = Model.Where(x => x.DataNascimento.Day < DateTime.Now.Day).OrderByDescending(x => x.DataNascimento).ToList();
+    List<UsuarioModel> aniversariantesProximos = Model.Where(x => x.DataNascimento.Day > DateTime.Now.Day).OrderBy(x => x.DataNascimento).ToList();
+}
+
+@if (aniversariantesHoje.Count() > 0 || aniversariantesProximos.Count() > 0 || aniversariantesAnteriores.Count() > 0)
+{
+    <div class="row justify-content-center">
+        <div class="alert alert-dourado col-8 col-md-auto">
+            <h3 class="alert-heading">
+                <i class="fa-solid fa-cake-candles"></i>&ensp;
+                Aniversariantes do Mês
+            </h3>
+            @if (aniversariantesHoje.Count() > 0)
+            {
+                <div class="col-12 col-md-auto">
+                    <h5 class="mt-3 pt-3 border-top border-dark">HOJE</h5>
+                    <table class="table table-borderless table-backgroundless">
+                        @foreach (var a in aniversariantesHoje)
+                        {
+                            <tr>
+                                <td class="text-start">@a.NomeCompleto</td>
+                                <td class="text-end">
+                                    @a.DataNascimento.ToString("dd 'de' MMMM", new System.Globalization.CultureInfo("pt-BR"))
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            @if (aniversariantesProximos.Count() > 0)
+            {
+                <div class="col-12 col-md-auto">
+                    <h5 class="mt-3 pt-3 border-top border-dark">PRÓXIMOS</h5>
+                    <table class="table table-borderless table-backgroundless">
+                        @foreach (var a in aniversariantesProximos)
+                        {
+                            <tr>
+                                <td class="text-start">@a.NomeCompleto</td>
+                                <td class="text-end">
+                                    @a.DataNascimento.ToString("dd 'de' MMMM", new System.Globalization.CultureInfo("pt-BR"))
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            @if (aniversariantesAnteriores.Count() > 0)
+            {
+                <div class="col-12 col-md-auto">
+                    <h5 class="mt-3 pt-3 border-top border-dark">ANTERIORES</h5>
+                    <table class="table table-borderless table-backgroundless">
+                        @foreach (var a in aniversariantesAnteriores)
+                        {
+                            <tr>
+                                <td class="text-start">@a.NomeCompleto</td>
+                                <td class="text-end">
+                                    @a.DataNascimento.ToString("dd 'de' MMMM", new System.Globalization.CultureInfo("pt-BR"))
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}

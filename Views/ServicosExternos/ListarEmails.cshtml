@@ -1,0 +1,77 @@
+﻿@model List<EmailConfig>
+
+@{
+    ViewData["Title"] = "E-mails do Sistema";
+}
+
+<div class="row justify-content-end">
+    <div class="col text-start">
+        <h5 class="text-uppercase">E-mails do Sistema</h5>
+    </div>
+    <div class="col-auto text-end">
+        <a role="button" class="btn btn-primary btn-sm" asp-action="CadastroEmail" asp-controller="ServicosExternos">
+            <i class="fa-solid fa-key"></i>&nbsp; NOVO
+        </a>
+        <a asp-controller="Menu" asp-action="Cadastros" class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-reply"></i>&nbsp;
+            Voltar
+        </a>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+
+<div class="row">
+    <div class="col mx-auto">
+        <table class="table table-striped table-bordered border-light-subtle mb-0">
+            <thead>
+                <tr>
+                    <td class="text-center">ID</td>
+                    <td class="text-center">Descrição</td>
+                    <td class="text-center">Remetente</td>
+                    <td class="text-center">Server</td>
+                    <td class="text-center">Port</td>
+                    <td class="text-center">SSL?</td>
+                    <td class="text-center">StartTls?</td>
+                    <td class="text-center">Usuario</td>
+                    <td class="text-center">Senha</td>
+                    <td class="text-center"></td>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="p-1 text-start align-middle col-1">@item.ID</td>
+                    <td class="p-1 text-start align-middle col-1">@item.Descricao</td>
+                    <td class="p-1 text-start align-middle col-1">@item.FromName</td>
+                    <td class="p-1 text-end align-middle col-1">@item.Server</td>
+                    <td class="p-1 text-end align-middle col-1">@item.Port</td>
+                    <td class="p-1 text-center align-middle col-1">@item.UseSSL</td>
+                    <td class="p-1 text-center align-middle col-1">@item.UseStartTls</td>
+                    <td class="p-1 text-start align-middle col-1">@item.Username</td>
+                    <td class="p-1 text-start align-middle col-1">@item.Password</td>
+                    <td class="p-1 text-start align-middle justify-content-end d-flex gap-2">
+                        <a asp-controller="ServicosExternos" asp-action="CadastroEmail" asp-route-emailID="@item.ID" class="btn btn-secondary btn-sm">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <form asp-action="Deletar" asp-controller="ServicosExternos" asp-route-id="@item.ID" asp-route-tipo="email">
+                            <button type="submit" class="btn btn-danger btn-sm btn-deletar">
+                                <i class="fas fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        //TODO: DELETAR POR AJAX E COM CONFIRMAÇÃO
+    </script>
+}

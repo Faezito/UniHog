@@ -1,0 +1,258 @@
+﻿@model List<CestaBasicaModel>
+
+@{
+    ViewData["Title"] = "Gestão de Cestas Básicas";
+}
+
+<div class="row justify-content-end">
+    <div class="col text-start">
+        <h5 class="text-uppercase">GESTÃO DE CESTAS BÁSICAS</h5>
+    </div>
+    <div class="col-auto text-end">
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCadastro">
+            <i class="fa-solid fa-plus"></i>&nbsp; ADICIONAR
+        </button>
+        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalAjuda">
+            <i class="fa-solid fa-question"></i>&nbsp; AJUDA
+        </button>
+        <a asp-controller="Menu" asp-action="CestaBasica" class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-reply"></i>&nbsp;
+            Voltar
+        </a>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+
+<div class="col col-md-6 mx-auto">
+    <table class="table table-striped table-bordered border-light-subtle mb-0">
+        <thead>
+            <tr>
+                <td class="text-center">Descrição</td>
+                <td class="text-center">Itens</td>
+                <td class="text-center">Estoque</td>
+                <td class="text-center"></td>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="p-1 text-start align-middle">@item.Descricao</td>
+                <td class="p-1 text-center align-middle">@item.Itens</td>
+                <td class="p-1 text-center align-middle">
+                    @item.Quantidade
+                    @if (item.Quantidade <= item.EstoqueMin)
+                    {
+                        <span data-bs-toggle="tooltip"
+                              data-bs-placement="left"
+                              data-bs-title="@($"Atenção! Seu estoque deste item está baixo, estoque mínimo: {item.EstoqueMin}")">
+                            <i class="fa-solid fa-circle-exclamation text-danger"></i>
+                        </span>
+                    }
+                </td>
+                <td class="text-center">
+                    <button type="button" data-id="@item.ID" class="btn btn-secondary btn-sm w-auto btn-editar">
+                        <i class="fa-solid fa-pencil"></i>
+                    </button>
+                    <form id="form-deletar" class="d-inline">
+                        <input type="hidden" name="id" value="@item.ID" />
+
+                        <button type="submit" class="btn btn-danger btn-sm btn-deletar w-auto">
+                            <i class="fas fa-trash-can"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+<!-- Modal Add Cesta -->
+<div class="modal modal-lg fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Cadastro
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="form-cadastro">
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-6">
+                            <label for="Tipo">Descrição</label>
+                            <input type="text" class="form-control" name="Descricao" placeholder=" " required>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="Tipo">Custo</label>
+                            <input type="text" class="form-control money" name="Custo" placeholder=" ">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="Tipo">Itens</label>
+                            <input type="text" class="form-control" name="Itens" placeholder=" ">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="Tipo">Quantidade</label>
+                            <input type="text" class="form-control" name="Quantidade" placeholder=" ">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="Tipo">Estoque Mínimo</label>
+                            <input type="text" class="form-control" name="EstoqueMinimo" placeholder=" ">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <button type="button" id="btnCadastrar" class="btn btn-success btn-sm">
+                                <span id="texto-salvar">
+                                    <i class="fa-solid fa-floppy-disk"></i>&nbsp;
+                                    Salvar
+                                </span>
+                                <span id="loading" style="display:none; text-align:center;" class="spinner-border spinner-border-sm" role="status"></span>
+                            </button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fa-solid fa-reply"></i>&nbsp;
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Ajuda -->
+<div class="modal modal-lg fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Ajuda
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fs-7">Esta página serve para cadastro e manipulação das Cestas Básicas disponíveis no projeto.</p>
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Cadastro
+                        <button type="button" class="btn btn-primary btn-sm">
+                            <i class="fa-solid fa-plus"></i>&nbsp; ADICIONAR
+                        </button>
+                    </h5>
+                    <p class="fs-7">
+                        Caso só trabalhem com um tipo de Cesta Básica e ela já esteja aparecendo na tabela, este botão pode ser ignorado.<br />
+                        Caso possuam mais de um tipo de cesta básica no projeto, este botão serve para cadastrar novas cestas, assim como os itens que as compõem, custo, quantidade e estoque mínimo.
+                        Todos os campos que não estão destacados são opcionais, porém, se não houverem Quantidade e Estoque Mínimos cadastrado, o sistema não poderá informar quando o estoque estiver
+                        baixo.
+                    </p>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Edição
+                        <button type="button" class="btn btn-secondary btn-sm w-auto">
+                            <i class="fa-solid fa-pencil"></i>
+                        </button>
+                    </h5>
+                    <p class="fs-7">
+                        O botão de Lápis ao lado da cesta, assim como em todo o sistema, significa EDIÇÃO, ou seja, permite que você edite a cesta, caso precise mudar alguma informação ou
+                        <b>manipular o estoque (adicionar/remover cestas)</b>. <br />
+                        <i class="text-warning-emphasis">Lembrando que a quantidade de itens é a quantidade total, logo, se existem 5 no estoque e foram compradas mais 10, o valor digitado deve ser 15 (10 novas + 5 atuais)</i>
+                    </p>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Deletar
+                        <button type="button" class="btn btn-danger btn-sm w-auto">
+                            <i class="fas fa-trash-can"></i>
+                        </button>
+                    </h5>
+                    <p class="fs-7">O botão de Lixeira ao lado da cesta, assim como em todo o sistema, significa DELETAR, permitindo que você <b class="text-danger">delete a cesta </b>.</p>
+                    <p class="fw-bold text-warning-emphasis">
+                        ATENÇÃO. Este botão não serve para retirar itens do estoque, ele DELETA A CESTA. Para remover itens do estoque, use o botão de EDIÇÃO (Lápis).
+                    </p>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h6>
+                        Descrição - é o Nome da Cesta Básica, para identificá-la.                   
+                    </h6>
+                    <h6>
+                        Itens - Listagem de itens que compõe a cesta.                   
+                    </h6>
+                    <h6>
+                        Estoque - Quantidade de cestas disponíveis.                   
+                    </h6>
+                    <h6>
+                        Estoque Mínimo - Quantidade mínima de cestas para o sistema alertar a necessidade de repor o estoque.                   
+                    </h6>
+
+                </section>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="area-modal"></div>
+
+@section Scripts {
+    <script>
+        $(document).on('click', '.btn-deletar', function (e) {
+            fn_deletar(e, this, '@Url.Action("DeletarCesta", "CestaBasica")')
+        });
+
+        $(document).on('click', '#btnSalvar',  function (evt) {
+            fn_submit4(evt, 'form-edicao', '@Url.Action("Cadastro", "CestaBasica")', btnSelector = '#btnSalvar')
+        });
+
+        $(document).on('click', '#btnCadastrar',  function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Cadastro", "CestaBasica")', btnSelector = '#btnCadastrar')
+        });
+
+        $(document).on('click', '.btn-editar', function(e){
+            const id = $(this).data('id');
+            modalEdicao(id);
+        })
+
+
+        // TRANSFORMAR EM WRAPPER
+        function modalEdicao(id) {
+            $.ajax({
+                url: '/CestaBasica/Editar?id=' + id,
+                type: 'POST',
+                dataType: 'html',
+                success: function(html)
+                {
+                    $('#area-modal').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('modalCesta'))
+                    modal.show();
+                },
+                error: function (xhr) {
+                    let mensagem = xhr.responseText || 'Erro ao carregar';
+                    alert(mensagem);
+                    console.error('Erro da controller:', mensagem);
+                }
+            })
+        }
+
+
+    </script>
+}

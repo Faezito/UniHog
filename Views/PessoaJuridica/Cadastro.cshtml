@@ -1,0 +1,306 @@
+﻿@model PessoaJuridicaModel;
+
+@{
+    ViewData["Title"] = "Cadastro de Pessoa Jurídica";
+
+    var dias = new Dictionary<int, string>
+    {
+        {1, "Domingo"},
+        {2, "Segunda-feira"},
+        {3, "Terça-feira"},
+        {4, "Quarta-feira"},
+        {5, "Quinta-feira"},
+        {6, "Sexta-feira"},
+        {7, "Sábado"}
+    };
+
+    int i = 0;
+}
+
+<style>
+    /* container */
+    .select2-container--default .select2-selection--single {
+        height: calc(3.5rem + 2px);
+        padding: .375rem .75rem;
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        background-color: var(--bs-body-bg);
+        display: flex;
+        align-items: center;
+    }
+
+    /* texto */
+    .select2-selection__rendered {
+        color: var(--bs-body-color);
+        padding-left: 0;
+        line-height: normal;
+    }
+
+    /* seta */
+    .select2-selection__arrow {
+        height: 100%;
+        right: .75rem;
+    }
+
+    /* foco (igual Bootstrap) */
+    .select2-container--default.select2-container--focus
+    .select2-selection--single {
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
+    }
+
+    /* disabled */
+    .select2-container--default.select2-container--disabled
+    .select2-selection--single {
+        background-color: var(--bs-secondary-bg);
+        cursor: not-allowed;
+    }
+
+    .select2-dropdown {
+        border-radius: var(--bs-border-radius);
+        border: 1px solid var(--bs-border-color);
+    }
+
+    .select2-results__option {
+        padding: .375rem .75rem;
+    }
+
+    .select2-results__option--highlighted {
+        background-color: var(--bs-primary);
+        color: #fff;
+    }
+</style>
+
+
+<div class="d-none d-sm-inline">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "Cadastro de Pessoa Jurídica", rota = @Url.Action("Cadastros", "Menu") })
+</div>
+
+<hr class="mb-4" />
+
+<form method="post" id="form-cadastro" enctype="multipart/form-data">
+    <input type="hidden" asp-for="PessoaJuridicaID" />
+    <input type="hidden" id="Regiao" asp-for="Endereco.Regiao" />
+
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <!--  Nome, Email e CPF  -->
+            <div class="row mb-3 gy-3">
+
+                @if (Model.PessoaID.HasValue)
+                {
+                    <input type="hidden" asp-for="PessoaID" />
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label>Responsável</label>
+                        <input type="text" class="form-control" asp-for="Pessoa" readonly disabled>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label asp-for="PessoaID">Responsável</label>
+                        <select id="UsuarioId" asp-for="PessoaID" class="form-control" style="width:100%"></select>
+                    </div>
+                }
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="NomeFantasia">Nome Fantasia</label>
+                    <input type="text" class="form-control" asp-for="NomeFantasia" required>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="RazaoSocial">Razão Social</label>
+                    <input type="text" class="form-control" asp-for="RazaoSocial" required>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="CNPJ">CNPJ</label>
+                    <input type="text" class="form-control cnpj" asp-for="CNPJ" required>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="EspecialidadeID">Especialização</label>
+                    <select asp-for="EspecialidadeID" class="form-select">
+                        @await Component.InvokeAsync("DropEspecializacoes")
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Ativo">Ativo</label>
+                    <select asp-for="Ativo" class="form-select">
+                        <option value="true">SIM</option>
+                        <option value="false">NÃO</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FUNCIONAMENTO -->
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <h5 class="text-secondary mb-4">Dias de Funcionamento</h5>
+            <hr />
+            <table class="table table-responsive table-striped-columns">
+                <thead>
+                    <tr>
+                        <td>Dia</td>
+                        <td>Manhã Abertura</td>
+                        <td>Manhã Fechamento</td>
+                        <td>Tarde Abertura</td>
+                        <td>Tarde/Noite Fechamento</td>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    @foreach (var d in dias)
+                    {
+                        <input type="hidden" asp-for="Funcionamento[i].DiaID" value="@d.Key" />
+                        <tr>
+                            <td>
+                                @d.Value
+                            </td>
+                            <td>
+                                <input type="text" asp-for="Funcionamento[i].ManhaAbertura" class="form-control form-control-sm time" />
+                            </td>
+                            <td>
+                                <input type="text" asp-for="Funcionamento[i].ManhaFechamento" class="form-control form-control-sm time" />
+                            </td>
+                            <td>
+                                <input type="text" asp-for="Funcionamento[i].TardeAbertura" class="form-control form-control-sm time" />
+                            </td>
+                            <td>
+                                <input type="text" asp-for="Funcionamento[i].TardeFechamento" class="form-control form-control-sm time" />
+                            </td>
+
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+    <!-- ENDEREÇO -->
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div>
+                <h5 class="text-secondary mb-3">Endereço</h5>
+                <hr />
+            </div>
+
+            <div class="row justify-content-center gy-3 mb-3">
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="cep">Usar o mesmo endereço da pessoa?</label>
+
+                    <input type="checkbox"
+                           class="form-check-input"
+                           id="MesmoEndereco"
+                           asp-for="MesmoEndereco" />
+                </div>
+
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="cep">CEP</label>
+                    <input type="text" class="form-control endereco" id="cep" asp-for="Endereco.CEP">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="rua">Rua</label>
+                    <input type="text" class="form-control endereco" id="rua" asp-for="Endereco.Rua">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Numero">Número</label>
+                    <input type="text" class="form-control endereco" id="Numero" asp-for="Endereco.Numero">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="bairro">Bairro</label>
+                    <input type="text" class="form-control endereco" id="bairro" asp-for="Endereco.Bairro">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Cidade">Cidade</label>
+                    <input type="text" class="form-control endereco" id="Cidade" asp-for="Endereco.Cidade">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado">Estado</label>
+                    <input type="text" class="form-control endereco" id="Estado" asp-for="Endereco.Estado">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado">UF</label>
+                    <input type="text" class="form-control endereco" id="uf" asp-for="Endereco.UF">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado">Complemento</label>
+                    <input type="text" class="form-control endereco" id="uf" asp-for="Endereco.Complemento">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado">Referência</label>
+                    <input type="text" class="form-control endereco" id="uf" asp-for="Endereco.Referencia">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @await Component.InvokeAsync("FormFooter", new { action = "Cadastros", controller = "Menu" })
+
+</form>
+
+@section Scripts {
+    <script src="~/js/consulta-cep.js" asp-append-version="true"></script>
+    <script>
+        $('#btnSalvar').on('click', function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Cadastro", "PessoaJuridica")', btnSelector = '#btnSalvar')
+        });
+
+        $('#MesmoEndereco').on('change', function(){
+            if($(this).is(':checked')){
+                $('.endereco').prop('disabled', true)
+            }else{
+                $('.endereco').prop('disabled', false)
+            }
+        })
+
+        $(document).ready(function () {
+
+            $('#produtoSelect').on('change', function () {
+
+                const $option = $(this).find('option:selected');
+                const areaId = $option.closest('optgroup').data('id');
+
+                $('#AreaID').val(areaId ?? '');
+            });
+            $('#produtoSelect').trigger('change');
+        });
+
+        $('#UsuarioId').select2({
+            placeholder: "Digite o nome do usuário",
+            minimumInputLength: 2,
+            ajax: {
+                url: '/Usuario/ListarDrop',
+                dataType: 'json',
+                delay: 300,
+                data: function (params) {
+                    return {
+                        nome: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+    </script>
+}

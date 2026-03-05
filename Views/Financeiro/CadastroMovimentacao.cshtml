@@ -1,0 +1,119 @@
+﻿@model MovimentacaoFinanceiraModel;
+
+@{
+    List<TiposModel> motivos = ViewBag.motivos;
+
+    ViewData["Title"] = "Nova Movimentação";
+}
+
+<div class="d-none d-sm-inline">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "NOVA MOVIMENTAÇÃO", rota = @Url.Action("MovimentacoesFinanceiras", "Financeiro") })
+</div>
+
+<hr class="mb-4" />
+
+<form method="post" id="form-cadastro" enctype="multipart/form-data">
+    <div class="row justify-content-center">
+        <div class="col-10">
+
+            <div class="row mb-3 gy-3">
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="PessoaID">Nome Completo</label>
+                    <select asp-for="PessoaID" class="form-select" required>
+                        @await Component.InvokeAsync("DropPessoas", new { tipoIDs = "-1,1,2,3,4,5" })
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="DataMovimentacao">Data da Movimentação</label>
+                    <input type="date" class="form-control" asp-for="DataMovimentacao">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Tipo">Tipo</label>
+                    <select asp-for="Tipo" class="form-select" required>
+                        <option selected value="">TIPO</option>
+                        <option value="E">Entrada</option>
+                        <option value="S">Saída</option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Valor">Valor</label>
+                    <input type="text" class="form-control money" id="Valor" asp-for="Valor" required />
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="MotivoID">Motivo da Saída</label>
+                    <select asp-for="MotivoID" class="form-select" required>
+                        <option selected value="">SELECIONE</option>
+                        @foreach (var m in motivos)
+                        {
+                            <option value="@m.ID">@m.Descricao</option>
+                        }
+                        <option value="0">Outro</option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Descricao">Descrição</label>
+                    <input type="text" class="form-control" id="parcelas" asp-for="Descricao">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="QuantidadeParcelas">Quantidade de Parcelas?</label>
+                    <input type="text" class="form-control" id="parcelas" asp-for="QuantidadeParcelas">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="ValorParcela">Valor da Parcela</label>
+                    <input type="text" class="form-control money" id="valor-parcela" asp-for="ValorParcela">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="NotaFiscal" class="form-label text-center w-100">Nota Fiscal</label>
+                    <input type="file" class="form-control" id="input-imagem" asp-for="NotaFiscal">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("FormFooter", new { action = "MovimentacoesFinanceiras", controller = "Financeiro" })
+
+</form>
+
+@section Scripts {
+    <script>
+        $('#btnSalvar').on('click', async function (evt) {
+
+            evt.preventDefault();
+
+            const input = document.getElementById("input-imagem");
+            const file = input.files[0];
+
+            if (file) {
+                const resizedBlob = await redimensionarImagem(file, 1000, 1, false);
+
+                // substitui o arquivo do input pelo redimensionado
+                const newFile = new File([resizedBlob], file.name, { type: 'image/jpeg' });
+
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(newFile);
+                input.files = dataTransfer.files;
+            }
+
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("NovaMovimentacao", "Financeiro")', btnSelector = '#btnSalvar')
+        });
+
+        $(document).on('keyup', '#parcelas', function(){
+            let valor = parseFloat(('#Valor').val()) || 0;
+            let parcelas = parseFloat($('#parcelas').val()) || 0;
+            if (parcelas > 0) {
+                    let resultado = valor / parcelas;
+                    $('#valor-parcela').val(resultado.toFixed(2));
+                } else {
+                    $('#valor-parcela').val('0.00');
+                }
+            });
+    </script>
+}

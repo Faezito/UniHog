@@ -1,0 +1,121 @@
+﻿@model List<APIModel>
+
+@{
+    ViewData["Title"] = "Listagem de APIs";
+}
+
+<div class="row justify-content-end">
+    <div class="col text-start">
+        <h5 class="text-uppercase">Listagem de APIs</h5>
+    </div>
+    <div class="col-auto text-end">
+        <a role="button" class="btn btn-primary btn-sm" asp-action="CadastroAPI" asp-controller="ServicosExternos">
+            <i class="fa-solid fa-key"></i>&nbsp; NOVA
+        </a>
+        <a asp-controller="Menu" asp-action="Configuracoes" class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-reply"></i>&nbsp;
+            Voltar
+        </a>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+
+<div class="col mx-auto">
+    <table class="table table-striped table-bordered border-light-subtle mb-0">
+        <thead>
+            <tr>
+                <td class="text-center">ID</td>
+                <td class="text-center">Descrição</td>
+                <td class="text-center">Token</td>
+                <td class="text-center">Modelo</td>
+                <td class="text-center">Url</td>
+                <td class="text-center">Usuario</td>
+                <td class="text-center">Senha</td>
+                <td class="text-center"></td>
+            </tr>
+        </thead>
+        @foreach (var api in Model)
+        {
+            <tr>
+                <td class="text-start align-middle">@api.COD</td>
+                <td class="text-start align-middle">@api.Descricao</td>
+                <td class="text-start align-middle">@api.Token</td>
+                <td class="text-start align-middle">@api.Modelo</td>
+                <td class="text-start align-middle">@api.Url</td>
+                <td class="text-start align-middle">@api.Usuario</td>
+                <td class="text-start align-middle">@api.Senha</td>
+                <td class="text-center align-middle">
+                    <div class="text-center d-flex justify-content-center align-items-center gap-1">
+                        <a type="button" asp-controller="ServicosExternos" asp-action="CadastroAPI" asp-route-apiID="@api.ID" class="btn btn-secondary btn-sm w-auto">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <form id="form-deletar" asp-action="Deletar" asp-controller="ServicosExternos" asp-route-id="@api.ID" asp-route-tipo="api" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm btn-deletar w-auto">
+                                <i class="fas fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).on('click', '.btn-deletar', function (e) {
+            e.preventDefault();
+
+            const form = $(this).closest("form");
+
+            Swal.fire({
+                title: "Realmente deseja deletar este item?",
+                showDenyButton: true,
+                denyButtonText: "Não",
+                confirmButtonText: "Sim"
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/ServicosExternos/Deletar',
+                        type: 'POST',
+                        data: form.serialize(),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        beforeSend: function () {
+                            $('.btn-deletar').prop('disabled', true);
+                        },
+                        complete: function () {
+                            $('.btn-deletar').prop('disabled', false);
+                        }
+                    })
+                    .done(function (response) {
+                        if (response.success) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    })
+                    .fail(function (xhr) {
+                        if (xhr.responseJSON) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: xhr.responseJSON.title ?? 'Erro',
+                                html: xhr.responseJSON.detail
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Erro',
+                                text: 'Erro inesperado ao processar a requisição.'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
+}

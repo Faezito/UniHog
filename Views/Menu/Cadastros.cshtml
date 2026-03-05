@@ -1,0 +1,156 @@
+﻿@{
+    ViewData["Title"] = "Menu de Cadastros";
+}
+
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="">
+        @await Component.InvokeAsync("TopoMenus", new { menu = "Cadastros", ajuda = true, rota = @Url.Action("Index", "Menu") })
+    </div>
+
+    <hr class="mb-4" />
+
+    <div class="row justify-content-center">
+
+        <!-- GESTÃO DE USUARIOS -->
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="alert alert-light shadow py-3">
+                <h5 class="text-secondary ps-2">
+                    <i class="fa-solid fa-user"></i>
+                    &nbsp;&nbsp;Usuários
+                </h5>
+                <hr />
+                <ol>
+                    <li><a class="text-decoration-none text-reset" asp-action="Index" asp-controller="Interessado">Listagem de Interessados</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Cadastro" asp-controller="Usuario">Novo Usuário</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Usuarios" asp-controller="Admin" asp-route-rotaId="1">Listar Usuários</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Usuarios" asp-controller="Admin" asp-route-rotaId="2">Listar Alunos</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- CATEGORIAS -->
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="alert alert-light shadow py-3">
+                <h5 class="text-secondary ps-2">
+                    <i class="fa-solid fa-layer-group"></i>
+                    &nbsp;&nbsp; CATEGORIAS
+                </h5>
+                <hr />
+                <ol>
+                    <li><a class="text-decoration-none text-reset" asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="1">Categorias de Usuário</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="3">Situações de Usuário</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Index" asp-controller="Estudo">Estudos Bíblicos</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Index" asp-controller="Projeto">Projetos Sociais</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="2">Tipos de Endereço</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="4">Tipos de Movimentação Financeira</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- PJ -->
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="alert alert-light shadow py-3">
+                <h5 class="text-secondary ps-2">
+                    <i class="fa-solid fa-briefcase"></i>
+                    &nbsp;&nbsp; PESSOAS JURÍDICAS
+                </h5>
+                <hr />
+                <ol>
+                    <li><a class="text-decoration-none text-reset" asp-action="Cadastro" asp-controller="PessoaJuridica">Nova</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Index" asp-controller="PessoaJuridica">Listar Empresas</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="Index" asp-controller="Especialidade">Especialidades</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- FINANCEIRO -->
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="alert alert-light shadow py-3">
+                <h5 class="text-secondary ps-2">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    &nbsp;&nbsp; FINANCEIRO
+                </h5>
+                <hr />
+                <ol>
+                    <li><a class="text-decoration-none text-reset" asp-action="CadastroMovimentacao" asp-controller="Financeiro">Cadastrar Movimentação</a></li>
+                    <li><a class="text-decoration-none text-reset" asp-action="MovimentacoesFinanceiras" asp-controller="Financeiro">Movimentações</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal Ajuda -->
+<div class="modal modal-lg fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Ajuda
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fs-7">
+                    Menu para gestão e cadastros gerais do sistema.
+                </p>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Usuarios
+                    </h5>
+                    <ul>
+                        <li><b>Listagem de interessado</b> - Lista as pessoas cadastradas nas pesquisas dos projetos sociais, permitindo integração com o sistema.</li>
+                        <li><b>Novo Usuário</b> - Cadastra um novo usuário no sistema, ou uma pessoa direto, sem a necessidade de ser cadastrado como interessado.</li>
+                        <li><b>Listar Usuários</b> - Lista as pessoas cadastradas e usuários do sistema para gestão.</li>
+                    </ul>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Categorias
+                    </h5>
+                    <ul>
+                        <li><b>Categorias de Usuário</b> - Cadastro e gestão de cargos de pessoas e usuários do sistema (Ex: Admin, Professor, Aluno).</li>
+                        <li><b>Situações de Usuário</b> - Cadastro e gestão de situações de pessoas (Ex: Ativo, inativo, estudando).</li>
+                        <li><b>Estudos Bíblicos</b> - Cadastro e gestão dos Estudos Bíblicos.</li>
+                        <li><b>Projetos Sociais</b> - Cadastro e gestão dos Projetos Sociais.</li>
+                        <li><b>Tipos de Endereço</b> - Cadastro e gestão dos Tipos de Endereço das pessoas.</li>
+                    </ul>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Pessoas Jurídicas (Empresas e Prestadores de Serviços)
+                    </h5>
+                    <ul>
+                        <li><b>Nova</b> - Cadastrar uma nova empresa/prestador de serviço. (Ex: Médico, advogado)</li>
+                        <li><b>Listar Empresas</b> - Lista as empresas e prestadores de serviço do sistema para gestão.</li>
+                        <li><b>Especialidades</b> - Cadastro e gestão de especialidades das pessoas jurídicas.</li>
+                    </ul>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Financeiro
+                    </h5>
+                    <ul>
+                        <li><b>Cadastrar Movimentação</b> - Cadastrar movimentações financeiras.</li>
+                        <li><b>Movimentações</b> - Lista as movimentações financeiras por mês.</li>
+                    </ul>
+                </section>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+

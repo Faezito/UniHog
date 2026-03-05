@@ -1,0 +1,45 @@
+﻿@using Z4.Bibliotecas
+@model PessoaJuridicaModel
+
+<div class="modal modal-lg fade" id="modalEmpresa" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col">
+                                <p class="p-1 m-0"><b>Nome Fantasia:</b> @Model.NomeFantasia</p>
+                                <p class="p-1 m-0"><b>Razão Social:</b> @Model.RazaoSocial</p>
+                                <p class="p-1 m-0"><b>Área:</b> @Model.Area</p>
+                                <p class="p-1 m-0"><b>Especialidade:</b> @Model.Especialidade</p>
+                                <p class="p-1 m-0"><b>Gênero:</b> @Model.Endereco.EnderecoReduzido</p>
+                            </div>
+
+                            <div class="col">
+                                @Html.Partial("_tabelaFuncionamento", Model.Funcionamento)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container row mx-auto justify-content-center mt-3">
+                    @await Component.InvokeAsync("TabelaEnderecos", new { pessoaId = Model.PessoaID, podeExcluir = false })
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

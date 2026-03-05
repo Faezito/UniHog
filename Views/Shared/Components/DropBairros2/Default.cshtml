@@ -1,0 +1,12 @@
+﻿@model List<BairroModel>
+
+@foreach (var bairro in Model)
+{
+    <option value="@bairro.Nome">@bairro.Nome</option>
+}
+
+@*
+
+@await Component.InvokeAsync("DropBairros")
+
+*@

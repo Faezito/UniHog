@@ -1,0 +1,150 @@
+﻿@model PessoaJuridicaRQModel
+
+@{
+    ViewData["Title"] = "Gestão de Empresas";
+}
+
+<div class="row justify-content-end">
+    <div class="col justify-content-end text-end">
+        <form class="" id="pesquisar">
+            <div class="row justify-content-between">
+                <div class="col-12 col-xl-3">
+                    <h3 class="text-secondary text-sm-start text-center mt-2">GESTÃO DE EMPRESAS</h3>
+                </div>
+                <div class="col-12 col-xl-9 d-flex justify-content-end gap-2">
+                    <div class="row w-100">
+                        <div class="col-6 col-sm-4 col-lg-2 mt-auto">
+                            <label asp-for="NomeFantasia" class="form-label-sm w-100 text-start">Nome</label>
+                            <input type="text" asp-for="NomeFantasia" id="NomeFantasia" class="form-control form-control-sm w-100" placeholder="Pesquisar" />
+                        </div>
+
+                        <div class="col-6 col-sm-4 col-lg-2 mt-auto">
+                            <label asp-for="AreaID" class="form-label-sm w-100 text-start">Especialização</label>
+                            <select asp-for="AreaID" class="form-select form-select-sm w-100">
+                                <option selected value="">ÁREA</option>
+                                @await Component.InvokeAsync("DropEspecializacoes")
+                            </select>
+                        </div>
+
+                        <div class="col-6 col-sm-4 col-lg-2 mt-auto">
+                            <label asp-for="Ativo" class="form-label-sm w-100 text-start">Ativo</label>
+                            <select asp-for="Ativo" class="form-select form-select-sm w-100">
+                                <option selected value="">TODOS</option>
+                                <option value="1">SIM</option>
+                                <option value="0">NÃO</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-lg-6 d-flex justify-content-between mt-3 mt-lg-auto">
+                            <button type="submit" class="btn btn-secondary btn-sm w-30 mt-auto">
+                                <i class="fa-solid fa-magnifying-glass"></i>&nbsp; Pesquisar
+                            </button>
+                            <a role="button" class="btn btn-primary btn-sm w-30 mt-auto" asp-action="Cadastro" asp-controller="PessoaJuridica">
+                                <i class="fa-solid fa-user-plus"></i>&nbsp; NOVO
+                            </a>
+                            <a asp-controller="Menu" asp-action="Cadastros" class="btn btn-secondary btn-sm w-30 mt-auto">
+                                <i class="fa-solid fa-reply"></i>&nbsp;
+                                Voltar
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+<div id="tabela-empresas" class="col-12 table-responsive table-responsive-sm">
+</div>
+
+<div id="area-modal"></div>
+
+@section Scripts {
+    <script>
+        $('#pesquisar').on('submit', function (e) {
+            e.preventDefault()
+            carregarTabela();
+        });
+
+        $(document).ready(function (){
+            carregarTabela();
+        })
+
+        $("#NomeFantasia").on('keyup', function () {
+            carregarTabela();
+        });
+
+        let timeout = null;
+
+        $("#NomeFantasia").on('keyup', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                carregarTabela();
+            }, 300);
+        });
+
+        function carregarTabela() {
+            const titulo = $('#NomeFantasia').val();
+
+            $.ajax({
+                url: '/PessoaJuridica/Listar',
+                type: 'POST',
+                dataType: 'html',
+                data: $('#pesquisar').serialize(),
+
+                beforeSend: function () {
+                },
+
+                success: function (resultado) {
+                    $("#tabela-empresas").html(resultado);
+                },
+
+                complete: function () {
+                },
+
+                error: function () {
+                }
+            });
+        }
+
+        function abrirModal(id) {
+            $.ajax({
+                url: '/PessoaJuridica/Detalhes?id=' + id,
+                type: 'POST',
+                dataType: 'html',
+                success: function(html)
+                {
+                    $('#area-modal').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('modalEmpresa'))
+                    modal.show();
+                },
+                error: function (xhr) {
+                    let mensagem = xhr.responseText || 'Erro ao carregar usuário';
+                    alert(mensagem);
+                    console.error('Erro da controller:', mensagem);
+                }
+            })
+        }
+
+        $(document).on('click', 'btn-deletar', function(e){
+            e.preventDefault();
+             const form = $(this).closest("form");
+
+             Swal.fire({
+                title: "Realmente deseja reiniciar a senha deste usuário?",
+                showDenyButton: true,
+                denyButtonText: "Não",
+                confirmButtonText: "Sim"
+             }).then((result) => {
+                 if(result.isConfirmed){
+                     form.trigger("submit");
+                 }
+             })
+        })
+
+    </script>
+}
+

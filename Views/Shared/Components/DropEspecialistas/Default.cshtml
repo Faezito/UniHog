@@ -1,0 +1,17 @@
+﻿@model List<PessoaJuridicaModel>
+@{
+    var areas = ViewBag.Areas;
+}
+
+@foreach (var x in Model.Select(x => new { x.EspecialidadeID, x.Especialidade }).Distinct())
+{
+    <optgroup label="@x.Especialidade" />
+    @foreach (var item in Model.Where(m => m.EspecialidadeID == x.EspecialidadeID))
+    {
+        <option value="@item.PessoaID">@item.Pessoa</option>
+    }
+}
+
+@*
+    @await Component.InvokeAsync("DropEspecialistas", new { areaId })
+*@

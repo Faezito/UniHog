@@ -1,0 +1,37 @@
+﻿@{
+    string action = ViewBag.Action;
+    string controller = ViewBag.Controller;
+}
+
+<hr class="my-5 px-5" />
+
+<div class="row my-1 align-self-end justify-content-end mb-3">
+    <div class="col-sm-3 col-md-2 col-6">
+        <button type="submit" id="btnSalvar" class="btn btn-success w-100 my-0">
+            <span id="texto-salvar">
+                <i class="fa-solid fa-floppy-disk"></i>&nbsp;
+                Salvar
+            </span>
+            <span id="loading" style="display:none; text-align:center;" class="spinner-border spinner-border-sm" role="status"></span>
+        </button>
+    </div>
+
+    @if (string.IsNullOrWhiteSpace(action) || string.IsNullOrWhiteSpace(controller))
+    {
+        <div class="col-sm-3 col-md-2 col-6">
+            <button onclick="history.back()" class="btn btn-secondary w-100 my-0">
+                <i class="fa-solid fa-reply"></i>&nbsp;
+                Voltar
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="col-sm-3 col-md-2 col-6">
+            <a asp-controller="@controller" type="button" asp-action="@action" class="btn btn-secondary w-100 my-0">
+                <i class="fa-solid fa-reply"></i>&nbsp;
+                Voltar
+            </a>
+        </div>
+    }
+</div>

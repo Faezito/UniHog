@@ -1,0 +1,207 @@
+﻿@model UsuarioModel
+@{
+    ViewData["Title"] = "Login";
+}
+<style>
+    .form-floating > .form-control:focus ~ label::after,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label::after,
+    .form-floating > .form-control-plaintext ~ label::after,
+    .form-floating > .form-select ~ label::after {
+        background-color: transparent !important;
+        color: black;
+    }
+
+
+    body {
+        background-color: black;
+    }
+
+</style>
+
+<div class="row justify-content-center justify-content-md-end">
+    <div class="col-6 col-xl-8 overflow-hidden d-none d-md-block">
+        <img src="/img/bg/background.jpg"
+             class="w-100 h-100 object-fit-cover">
+    </div>
+    <div class="col-12 col-sm-8 col-md-6 col-xl-4 mt-5 pt-5 px-5">
+        <div class="px-3">
+            <div class="">
+                <h2 class="display-4 mb-5 text-light text-center">BOPE</h2>
+
+                <form class="form" method="post" id="form-login">
+                    @if (ViewData["MSG_E"] != null)
+                    {
+                        <span class="alert alert-danger fw-bold m-0">
+                            @ViewData["MSG_E"]
+                        </span>
+                    }
+                    <div class="form-floating mb-3">
+                        <input id="Login" name="Login" type="text" class="form-control" placeholder=" " required />
+                        <label class="text-dark" for="Login">Usuario, CPF ou E-mail</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input id="Senha" name="Senha" type="password" class="form-control" placeholder=" " required />
+                        <label class="text-dark" for="Senha">Senha</label>
+                    </div>
+
+                    <div class="text-center w-100 mb-3">
+                        <button type="submit" class="btn btn-primary w-100 py-3" id="btnLogin">
+                            <span id="texto-login">
+                                ACESSAR
+                            </span>
+                            <span id="loading" style="display:none; text-align:center;" class="spinner-border spinner-border-sm" role="status"></span>
+                        </button>
+                        <div class="row py-2">
+                            <button type="button" class="btn text-light" data-bs-toggle="modal" data-bs-target="#modalTipo">
+                                ESQUECI MINHA SENHA
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL RECUPERAR SENHA -->
+
+<div class="modal fade" id="modalTipo" tabindex="-1" aria-labelledby="modalTipoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Recuperar Senha
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="row">
+                <form class="form-control w-auto mx-auto" id="form-recuperar">
+                    <div class="text-center">
+                        <div class="input-group mb-2">
+                            <label for="email" class="input-group-text">Email</label>
+                            <input type="text" class="form-control" name="email" />
+                            <span asp-validation-for="Email"></span>
+                            <button type="button" id="recuperar-senha" class="btn btn-primary">
+                                <span id="texto-salvar">
+                                    Enviar código
+                                </span>
+                                <span id="loading" style="display:none; text-align:center;" class="spinner-border spinner-border-sm" role="status"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $("#form-login").on('submit', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: '/Home/Login',
+                type: 'POST',
+                data: $('#form-login').serialize(),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                beforeSend: function () {
+                    $('#btnLogin').prop('disabled', true);
+                },
+                complete: function () {
+                    $('#btnLogin').prop('disabled', false);
+                },
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: response.title ?? 'Erro',
+                            text: "Erro de login"
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    let json = xhr.responseJSON;
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: json?.title ?? 'Erro',
+                        text: json?.detail ?? 'Ocorreu um erro inesperado.'
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#recuperar-senha', function (e) {
+            e.preventDefault();
+
+            const form = $(this).closest("form");
+
+            Swal.fire({
+                title: "Realmente deseja resetar sua senha? Esta ação é irreversível.",
+                showDenyButton: true,
+                denyButtonText: "Não",
+                confirmButtonText: "Sim",
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: '/Home/RecuperarSenha',
+                        type: 'POST',
+                        data: form.serialize(),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        beforeSend: function () {
+                            $("#loading").show();
+                            $("#texto-salvar").hide();
+                            $('#btnSalvar').prop('disabled', true);
+                        },
+                        complete: function () {
+                            $("#loading").hide();
+                            $("#texto-salvar").show();
+                            $('#btnSalvar').prop('disabled', false);
+                        }
+                    })
+                    .done(function (response) {
+
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: response.title ?? 'Sucesso',
+                                html: response.detail
+                            });
+                        }
+
+                    })
+                    .fail(function (xhr) {
+
+                        if (xhr.responseJSON) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: xhr.responseJSON.title ?? 'Erro',
+                                html: xhr.responseJSON.detail
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Erro',
+                                text: 'Erro inesperado ao processar a requisição.'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
+}

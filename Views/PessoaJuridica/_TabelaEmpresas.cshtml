@@ -1,0 +1,57 @@
+﻿@using Z4.Bibliotecas
+@model List<PessoaJuridicaModel>
+
+@{
+}
+
+@if (Model.Count() <= 0)
+{
+    @await Component.InvokeAsync("TabelaSemRegistros")
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td class="text-center text-uppercase">Empresa</td>
+                <td class="text-center text-uppercase">Contato</td>
+                <td class="text-center text-uppercase">Situação</td>
+                <td class="text-center text-uppercase">Endereço</td>
+                <td class="text-center text-uppercase">Bairro</td>
+                <td class="text-center text-uppercase">Editar</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="lista-hover">
+                    <td class="align-middle" onclick="abrirModal(@item.PessoaJuridicaID)">
+                        <ul class="list-unstyled m-0 p-0 fs-6 text-secondary">
+                            <li>@item.NomeFantasia</li>
+                            <li>@item.RazaoSocial</li>
+                            <li>@item.CNPJ</li>
+                        </ul>
+                    </td>
+                    <td class="align-middle" onclick="abrirModal(@item.PessoaJuridicaID)">
+                        <ul class="list-unstyled m-0 p-0 fs-6 text-secondary">
+                            <li>@(item.Telefone == null ? "" : item.Telefone.FormatarTelefone())</li>
+                            <li>@item.Email</li>
+                        </ul>
+                    </td>
+                    <td class="align-middle fs-6 @item.SituacaoCor">@item.Situacao</td>
+                    <td class="align-middle fs-6 text-secondary" onclick="abrirModal(@item.PessoaJuridicaID)">@item.Endereco?.EnderecoReduzido</td>
+                    <td class="align-middle fs-6 text-secondary" onclick="abrirModal(@item.PessoaJuridicaID)">@item.Endereco?.Bairro</td>
+                    <td class="p-1 m-0 align-middle text-center">
+                        <a asp-controller="PessoaJuridica" asp-action="Editar" asp-route-pessoajuridicaId="@item.PessoaJuridicaID" class="btn btn-secondary btn-sm">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+

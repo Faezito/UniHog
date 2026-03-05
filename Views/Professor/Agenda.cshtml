@@ -1,0 +1,170 @@
+﻿@model UsuarioRQModel
+
+@{
+    var prof = this.User.ObterUsuario();
+
+    string titulo = string.Empty;
+    if (prof.TipoID == 5)
+    {
+        string primeiroNome = prof.NomeCompleto.Split(" ")[0];
+        titulo = $"de {primeiroNome}";
+    }
+
+    List<DiasDaSemana> diasSemana = ViewBag.diasSemana;
+    ViewData["Title"] = $"Agenda {titulo}";
+}
+<style>
+    .card-menu:hover {
+        cursor: pointer;
+    }
+</style>
+
+
+<div class="row justify-content-end">
+    <form class="" id="pesquisar">
+        <div class="row justify-content-end">
+            <div class="col-12 col-lg-2 text-center text-md-start mt-auto me-auto">
+                <h3 class="text-secondary text-sm-start text-center mt-2">Agenda @titulo</h3>
+            </div>
+
+            <div class="col-12 col-lg-10 justify-content-end">
+                <div class="row justify-content-end gy-2">
+
+                    <!-- SE FOR PROFESSOR USA O ID DELE NA BUSCA, SE NÃO RENDERIZA O DROP PARA SELECIONAR -->
+                    @if (this.User.GetUserTipoId() < 4)
+                    {
+                        <div class="col-12 col-sm-4 col-md-3 col-lg-2 col-xl-4 mt-auto mb-3 mb-md-0">
+                            <label asp-for="ProfessorID" class="form-label-sm w-100 text-start">Professor</label>
+                            <select asp-for="ProfessorID" class="form-select form-select-sm w-100">
+                                <option selected value="">TODOS</option>
+                                @await Component.InvokeAsync("DropProfessores")
+                            </select>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="ProfessorID" value="@prof.PessoaID" />
+                    }
+
+                    <div class="col-12 col-sm-8 col-lg-10 col-xl-8 ms-auto mt-auto">
+                        <div class="row justify-content-end gy-1">
+                            <div class="col-12 col-lg-6 d-flex gap-1 p-sm-0">
+                                <button type="button" id="btnPesquisa" class="btn btn-primary btn-sm w-100 mt-auto">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    Pesquisar
+                                </button>
+                                <a asp-action="ChamadaEmCasa" asp-controller="Professor" class="btn btn-success btn-sm w-100 mt-auto">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    ESTUDO EM CASA
+                                </a>
+                            </div>
+                            <div class="col-12 col-lg-6 d-flex gap-1 p-sm-0 ps-lg-1">
+                                <button type="button" class="btn btn-warning btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modalAjuda">
+                                    <i class="fa-solid fa-question"></i>&nbsp; AJUDA
+                                </button>
+                                <a asp-controller="Menu" asp-action="Professor" class="btn btn-secondary btn-sm w-100 mt-auto">
+                                    <i class="fa-solid fa-reply"></i>&nbsp;
+                                    Voltar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<hr />
+
+<div id="agenda">
+</div>
+
+<!-- Modal Ajuda -->
+<div class="modal modal-lg fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Ajuda
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fs-7">Esta é sua agenda semanal de estudos bíblicos, aqui é possível ver cada dia, a quantidade de alunos e cada aluno por dia.</p>
+
+                @if (this.User.GetUserTipoId() < 3)
+                {
+                    <p class="fs-7 fw-light text-warning"> Administradores podem selecionar os professores para ver a agenda de cada um, professores podem ver apenas suas próprias agendas.</p>
+                }
+
+                <section class="border-bottom mb-3">
+                    <p class="">
+                        Ao clicar em qualquer dia, você irá para a chamada de ESTUDO NA IGREJA, daquele respectivo dia.
+                    </p>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        MANUAL (ESTUDO EM CASA)
+                        <a href="#" class="btn btn-success btn-sm w-auto mt-auto">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            Manual
+                        </a>
+                    </h5>
+                    <p class="fs-7">
+                        O botão MANUAL o levará à listagem de alunos para ir ao formulário de Estudo Bíblico EM CASA, para caso algum aluno da chamada presencial precise receber o estudo em casa por algum motivo.
+                    </p>
+                </section>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).on('click', '#btnSalvar', function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Chamada", "Professor")')
+        });
+
+        $(document).on('click', '#btnPesquisa', function() {
+            carregarTabela()
+        });
+
+        function carregarTabela() {
+            $.ajax({
+                url: '/Professor/Agenda',
+                type: 'POST',
+                dataType: 'html',
+                data: $('#pesquisar').serializeArray(),
+
+                beforeSend: function () {
+                },
+
+                success: function (resultado) {
+                    $("#agenda").html(resultado);
+                },
+
+                complete: function () {
+                },
+
+                error: function () {
+                }
+            });
+        }
+
+        const carregaAutomaticamente = @(this.User.GetUserTipoId() == 5 ? "true" : "false");
+
+        $(document).ready(function () {
+            if (carregaAutomaticamente) {
+                carregarTabela();
+            }
+        });
+
+    </script>
+}

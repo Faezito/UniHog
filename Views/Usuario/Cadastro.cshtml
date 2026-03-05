@@ -1,0 +1,216 @@
+﻿@model UsuarioModel;
+
+@{
+    ViewData["Title"] = "Novo Usuário";
+}
+
+<div class="d-none d-sm-inline">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "Cadastro de Usuário", rota = @Url.Action("Cadastros", "Menu") })
+</div>
+
+<hr class="mb-4" />
+
+<form method="post" id="form-cadastro" enctype="multipart/form-data">
+    <input type="hidden" asp-for="PessoaID" />
+    <input type="hidden" id="Regiao" name="Regiao" />
+
+    <div class="row justify-content-center">
+        <div class="col-10 col-sm-12">
+            <!--  Nome, Email e CPF  -->
+            <div class="row mb-3 gy-3">
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="NomeCompleto" class="form-label">Nome Completo</label>
+                    <input type="text" class="form-control" asp-for="NomeCompleto" required>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Usuario" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" asp-for="Usuario">
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input type="email" class="form-control" asp-for="Email" required>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Senha" class="form-label">Senha</label>
+                    <input type="password" class="form-control" asp-for="Senha">
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="cpf" class="form-label">CPF</label>
+                    <input type="text" class="form-control cpf" id="cpf" asp-for="CPF" required>
+                </div>
+
+
+                <!--  Nascimento, Tel e Genero  -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="DataNascimento" class="form-label">Data de Nascimento</label>
+                    <input type="text" class="form-control date" asp-for="DataNascimento" required>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Telefone" class="form-label">Telefone</label>
+                    <input type="text" class="form-control tel_com_ddd" id="telefone" asp-for="Telefone" required>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Genero" class="form-label">Gênero</label>
+                    <select asp-for="Genero" class="form-select" required>
+                        <option selected>GENERO</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+
+                <!--  Tipo, Estudo e Projeto  -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Tipo" class="form-label">Cargo</label>
+                    <select asp-for="TipoID" class="form-select">
+                        <option selected>SELECIONE</option>
+                        @await Component.InvokeAsync("DropUsuariosTipos", new { usuarioId = this.User.GetUserId() })
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="SituacaoID" class="form-label">Situação</label>
+                    <select asp-for="SituacaoID" class="form-select">
+                        @await Component.InvokeAsync("DropPessoasSituacoes", new { usuarioId = this.User.GetUserId() })
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="EstudaEmCasa" class="form-label">Estuda em Casa?</label>
+                    <select asp-for="EstudaEmCasa" class="form-select">
+                        <option value="">SELECIONE</option>
+                        <option value="true">SIM</option>
+                        <option value="false">NÃO</option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="EstudoBiblico" class="form-label">Estudo Biblico</label>
+                    <select asp-for="EstudoID" class="form-select">
+                        <option value="">SELECIONE</option>
+                        @await Component.InvokeAsync("DropEstudos")
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Projeto" class="form-label">Projeto Origem</label>
+                    <select asp-for="ProjetoIndicacaoID" class="form-select">
+                        <option value="">SELECIONE</option>
+                        @await Component.InvokeAsync("DropProjetos")
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Empresa" class="form-label">É empresa/PJ?</label>
+                    <select asp-for="Empresa" class="form-select">
+                        <option value="false">NÃO</option>
+                        <option value="true">SIM</option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Foto" class="form-label">Foto</label>
+                    <input type="file" id="input-foto" class="form-control" asp-for="Foto">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <h5 class="text-secondary mb-4">Dias de Estudo</h5>
+        <hr />
+        @Html.Partial("_CheckDiasDaSemana", Model)
+    </div>
+
+    <div class="row">
+        <h5 class="text-secondary mb-3">Endereço</h5>
+        <hr />
+    </div>
+
+    <div class="row justify-content-center gy-3 mb-3">
+        <div class="col-10 col-sm-12">
+            <div class="row mb-3 gy-3">
+                <input type="hidden" name="Regiao" id="Regiao" />
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="cep" class="form-label">CEP</label>
+                    <input type="text" class="form-control" id="cep" name="CEP">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="rua" class="form-label">Rua</label>
+                    <input type="text" class="form-control" id="rua" name="Rua">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Numero" class="form-label">Número</label>
+                    <input type="text" class="form-control" id="Numero" name="Numero" required>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="bairro" class="form-label">Bairro</label>
+                    <input type="text" class="form-control" id="bairro" name="Bairro">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Cidade" class="form-label">Cidade</label>
+                    <input type="text" class="form-control" id="Cidade" name="Cidade">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado" class="form-label">Estado</label>
+                    <input type="text" class="form-control" id="Estado" name="Estado">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado" class="form-label">UF</label>
+                    <input type="text" class="form-control" id="uf" name="UF">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado" class="form-label">Complemento</label>
+                    <input type="text" class="form-control" id="uf" name="Complemento">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado" class="form-label">Referência</label>
+                    <input type="text" class="form-control" id="uf" name="Referencia">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @await Component.InvokeAsync("FormFooter", new { action = "Usuarios", controller = "Admin" })
+
+</form>
+
+@section Scripts {
+    <script src="~/js/consulta-cep.js" asp-append-version="true"></script>
+    <script>
+        $('#btnSalvar').on('click', async function (evt) {
+
+            evt.preventDefault();
+
+            const input = document.getElementById("input-foto");
+            const file = input.files[0];
+
+            if (file) {
+                const resizedBlob = await redimensionarImagem(file, 600, 0.8);
+
+                // substitui o arquivo do input pelo redimensionado
+                const newFile = new File([resizedBlob], file.name, { type: 'image/jpeg' });
+
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(newFile);
+                input.files = dataTransfer.files;
+            }
+
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Cadastro", "Usuario")', btnSelector = '#btnSalvar')
+        });
+
+        $('#foto').on('click', function(){
+            $('#input-foto').click()
+        })
+
+    </script>
+}

@@ -1,0 +1,421 @@
+:root {
+    --mainblue-dark: #0f172a;
+    --mainblue: white;
+    --mainblue2: #21335f;
+    --darkblue: #0f172a;
+    --orange: #ffa900;
+    --brown: #6a5100;
+    --darkgray: #6b6a6a;
+    --lightgray: #cfcfcf;
+    --darkpurple: #020617;
+    --vinhoclaro: #600000;
+    --vinhoescuro: #240206;
+    --ouroclaro: #D4AF37;
+    --ouroescuro: #665009;
+    --cinza-grafite: #2C2C2C;
+    --off-white: #F8F8F8;
+    --scarlet: #A30000;
+    --verde: #33cc33;
+    --verdeEscuro: #009933;
+}
+
+html {
+    font-size: 14px;
+}
+
+.tracking-wider {
+    letter-spacing: 1px;
+}
+
+.bg-success-soft {
+    background-color: rgba(25, 135, 84, 0.2);
+}
+
+li {
+    width: fit-content;
+}
+
+.card-menu {
+    transition: transform 0.3s ease;
+}
+
+    .card-menu:hover {
+        transform: translateY(-5px);
+    }
+
+.alert-menu {
+    transition: transform 0.3s ease;
+}
+
+    .alert-menu:hover {
+        transform: translateY(-5px);
+    }
+
+.bg-dark {
+    background-color: var(--darkpurple) !important;
+}
+
+.card-game:hover {
+    box-shadow: 0px 0px 15px white;
+}
+
+.lista-hover:hover {
+    cursor: pointer;
+}
+
+.form-floating > .form-control:focus ~ label::after,
+.form-floating > .form-control:not(:placeholder-shown) ~ label::after,
+.form-floating > .form-control-plaintext ~ label::after,
+.form-floating > .form-select ~ label::after {
+    background-color: transparent !important;
+    color: black;
+}
+
+.form-floating label {
+    color: black !important;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+a {
+    text-decoration: none;
+}
+
+/*table,
+table thead,
+table tbody,
+table tr,
+table th,
+table td {
+    background-color: transparent !important;
+    border: none;
+    color: white;
+}*/
+
+.disabled, input[readonly] {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+input:required:invalid, select:required:invalid {
+    border: 1px solid #ffa900;
+}
+
+    input:required:valid {
+        border: 1px solid green;
+        background-color: #f5fff7;
+    }
+
+/* FONT SIZES PERSONALIZADOS */
+
+.fs-7 {
+    font-size: 0.9rem;
+}
+
+.fs-8 {
+    font-size: 0.8rem;
+}
+
+.fs-9 {
+    font-size: 0.7rem;
+}
+
+.fs-10 {
+    font-size: 0.6rem;
+}
+
+
+/* CORES DE TEXTO PERSONALIZADAS */
+
+.text-mainblue {
+    color: var(--mainblue);
+}
+
+.text-darkblue {
+    color: var(--darkblue);
+}
+
+.text-orange {
+    color: var(--orange);
+}
+
+.text-brown {
+    color: var(--brown);
+}
+
+.text-darkgray {
+    color: var(--darkgray);
+}
+
+.text-lightgray {
+    color: var(--lightgray);
+}
+
+.text-green{
+    color: var(--verde);
+}
+
+.text-vinhoclaro{
+    color: var(--vinhoclaro);
+}
+
+.text-vinhoescuro{
+    color: var(--vinhoescuro);
+}
+
+.text-ouro{
+    color: var(--ouroclaro);
+}
+
+.text-ouroescuro{
+    color: var(--ouroescuro);
+}
+
+
+/* CORES DE BACKGROUND PERSONALIZADAS */
+
+
+.bg-mainblue {
+    background-color: var(--mainblue);
+}
+
+.bg-darkblue {
+    background-color: var(--darkblue);
+}
+
+.bg-orange {
+    background-color: var(--orange);
+}
+
+.bg-brown {
+    background-color: var(--brown);
+}
+
+.bg-darkgray {
+    background-color: var(--darkgray);
+}
+
+.bg-lightgray {
+    background-color: var(--lightgray);
+}
+
+.bg-bope {
+    background-color: var(--vinhoclaro);
+}
+
+
+/* CORES DE BOTOES PERSONALIZADAS */
+
+.btn-mainblue {
+    --bs-btn-bg: var(--mainblue);
+    --bs-btn-border-color: var(--mainblue);
+    --bs-btn-color: #fff;
+}
+
+.btn-darkblue {
+    --bs-btn-bg: var(--darkblue);
+    --bs-btn-border-color: var(--darkblue);
+    --bs-btn-color: #fff;
+}
+
+.btn-orange {
+    --bs-btn-bg: var(--orange);
+    --bs-btn-border-color: var(--orange);
+    --bs-btn-color: #000;
+}
+
+.btn-brown {
+    --bs-btn-bg: var(--brown);
+    --bs-btn-border-color: var(--brown);
+    --bs-btn-color: #fff;
+}
+
+.btn-darkgray {
+    --bs-btn-bg: var(--darkgray);
+    --bs-btn-border-color: var(--darkgray);
+    --bs-btn-color: #fff;
+}
+
+.btn-lightgray {
+    --bs-btn-bg: #3d0309;
+    --bs-btn-border-color: var(--lightgray);
+    --bs-btn-color: #000;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--vinhoclaro) !important;
+    --bs-btn-border-color: var(--vinhoescuro) !important;
+    --bs-btn-color: var(--off-white) !important;
+    --bs-btn-hover-bg: var(--scarlet) !important;
+    --bs-btn-hover-border-color: var(--scarlet) !important;
+    --bs-btn-hover-color: var(--off-white) !important;
+    --bs-btn-active-bg: var(--scarlet) !important;
+    --bs-btn-active-border-color: var(--ouro-detalhes) !important;
+    --bs-btn-focus-shadow-rgb: 212, 175, 55;
+    --bs-btn-disabled-bg: #4a0000 !important;
+    --bs-btn-disabled-border-color: #4a0000 !important;
+}
+
+.btn-success {
+    --bs-btn-bg: var(--ouroclaro) !important;
+    --bs-btn-border-color: var(--ouroclaro) !important;
+    --bs-btn-color: var(--off-white) !important;
+    --bs-btn-hover-bg: var(--ouroescuro) !important;
+    --bs-btn-hover-border-color: var(--ouroescuro) !important;
+    --bs-btn-hover-color: var(--off-white) !important;
+    --bs-btn-active-bg: var(--ouroescuro) !important;
+    --bs-btn-active-border-color: var(--ouro-detalhes) !important;
+    --bs-btn-focus-shadow-rgb: 212, 175, 55;
+    --bs-btn-disabled-bg: #4a0000 !important;
+    --bs-btn-disabled-border-color: #4a0000 !important;
+}
+
+.btn-green {
+    --bs-btn-bg: var(--verde) !important;
+    --bs-btn-border-color: var(--verde) !important;
+    --bs-btn-color: var(--off-white) !important;
+    --bs-btn-hover-bg: var(--verdeEscuro) !important;
+    --bs-btn-hover-border-color: var(--verdeEscuro) !important;
+    --bs-btn-hover-color: var(--off-white) !important;
+    --bs-btn-active-bg: var(--verdeEscuro) !important;
+    --bs-btn-active-border-color: var(--verdeEscuro) !important;
+    --bs-btn-focus-shadow-rgb: var(--verdeEscuro);
+    --bs-btn-disabled-bg: #4a0000 !important;
+    --bs-btn-disabled-border-color: #4a0000 !important;
+}
+
+/* CORES LI */
+
+.list-group-item-mainblue {
+    background-color: var(--mainblue);
+    color: #fff;
+}
+
+.list-group-item-darkblue {
+    background-color: var(--darkblue);
+    color: #fff;
+}
+
+.list-group-item-orange {
+    background-color: var(--orange);
+    color: #000;
+}
+
+.list-group-item-brown {
+    background-color: var(--brown);
+    color: #fff;
+}
+
+.list-group-item-darkgray {
+    background-color: var(--darkgray);
+    color: #fff;
+}
+
+.list-group-item-lightgray {
+    background-color: var(--lightgray);
+    color: #000;
+}
+
+
+/* ALERTS PERSONALIZADOS */
+.alert-vinho {
+    --bs-alert-bg: #722f37;
+    --bs-alert-border-color: #5a252b;
+    --bs-alert-color: #ffffff;
+}
+
+.alert-dourado {
+    --bs-alert-bg: #d4af37;
+    --bs-alert-border-color: #b8962e;
+    --bs-alert-color: #212529;
+}
+
+
+
+/* NOTAS ESTRELA */
+
+.rating-input i {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #ffc107;
+}
+
+    .rating-input i.bi-star-fill {
+        color: #ffc107;
+    }
+
+
+
+
+/* WIDTH PERSONALIZADO */
+.w-30 {
+    width: 30% !important;
+}
+
+
+/* TABELA RESPONSIVA */
+@media (max-width: 992px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+        .table-responsive table {
+            min-width: 992px;
+        }
+}
+
+
+
+/* BOTÃO DE AJUDA */
+
+#btn-ajuda {
+    position: fixed;
+    border-radius: 50%;
+    bottom: 10px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ouroclaro);
+    color: var(--off-white);
+    z-index: 9999; /* Fica acima de tudo */
+    cursor: pointer;
+    font-size: 2.5rem;
+}
+    #btn-ajuda:hover {
+        transform: scale(1.1);
+    }
+
+
+
+ul, li {
+    background-color: transparent !important;
+}
+
+.table-backgroundless,
+.table-backgroundless thead,
+.table-backgroundless tbody,
+.table-backgroundless tr,
+.table-backgroundless th,
+.table-backgroundless td {
+    background-color: transparent !important;
+}

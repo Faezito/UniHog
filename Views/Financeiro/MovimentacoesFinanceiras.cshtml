@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "Movimentação Financeira";
+}
+
+<div class="row justify-content-end">
+    <div class="col justify-content-end text-end">
+        <form class="" id="pesquisar">
+            <div class="row justify-content-between">
+                <div class="col-12 col-xl-4">
+                    <h3 class="text-secondary text-sm-start text-center mt-2">MOVIMENTAÇÃO FINANCEIRA</h3>
+                </div>
+                <div class="col-12 col-xl-8 mt-auto">
+                    <div class="row justify-content-center">
+                        <div class="col-4 col-md-2">
+                            <label for="Tipo" class="form-label-sm w-100 text-start">Tipo</label>
+                            <select name="Tipo" class="form-select form-select-sm w-100">
+                                <option selected value="">TODOS</option>
+                                <option value="E">Entrada</option>
+                                <option value="S">Saída</option>
+                            </select>
+                        </div>
+                        <div class="col-4 col-md-2">
+                            <label for="Mes" class="form-label-sm w-100 text-start">Mês</label>
+                            <select name="Mes" class="form-select form-select-sm w-100">
+                                <option selected value="">MÊS</option>
+                                @await Component.InvokeAsync("DropMeses")
+                            </select>
+                        </div>
+                        <div class="col-4 col-md-2">
+                            <label for="Ano" class="form-label-sm w-100 text-start">Ano</label>
+                            <select name="Ano" class="form-select form-select-sm w-100">
+                                @await Component.InvokeAsync("DropAnos", new { anoInicio = 2015, anoSelecionado = 2026 })
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-xl-6 d-flex justify-content-between mt-3 mt-md-0">
+                            <button type="submit" class="btn btn-primary btn-sm w-30 mt-auto">
+                                <i class="fa-solid fa-magnifying-glass"></i>&nbsp; Pesquisar
+                            </button>
+                            <a role="button" class="btn btn-success btn-sm w-30 mt-auto" asp-action="CadastroMovimentacao" asp-controller="Financeiro">
+                                <i class="fa-solid fa-user-plus"></i>&nbsp; NOVA
+                            </a>
+                            <a asp-controller="Menu" asp-action="Cadastros" class="btn btn-secondary btn-sm w-30 mt-auto">
+                                <i class="fa-solid fa-reply"></i>&nbsp;
+                                Voltar
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+<div id="tabela" class="col-12 table-responsive table-responsive-sm">
+</div>
+
+<div id="area-modal"></div>
+
+@section Scripts {
+    <script>
+        $('#pesquisar').on('submit', function (e) {
+            e.preventDefault()
+            carregarTabela();
+        });
+
+        $(document).ready(function (){
+            carregarTabela();
+        })
+
+        $("#NomeCompleto").on('keyup', function () {
+            carregarTabela();
+        });
+
+        let timeout = null;
+
+        $("#NomeCompleto").on('keyup', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                carregarTabela();
+            }, 300);
+        });
+
+        function carregarTabela() {
+            $.ajax({
+                url: '/Financeiro/MovimentacoesFinanceiras',
+                type: 'POST',
+                dataType: 'html',
+                data: $('#pesquisar').serializeArray(),
+
+                beforeSend: function () {
+                },
+
+                success: function (resultado) {
+                    $("#tabela").html(resultado);
+                },
+
+                complete: function () {
+                },
+
+                error: function () {
+                }
+            });
+        }
+
+        function abrirModal(id) {
+            $.ajax({
+                url: '/Financeiro/NotaFiscal?id=' + id,
+                type: 'POST',
+                dataType: 'html',
+                success: function(html)
+                {
+                    $('#area-modal').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('modalNF'))
+                    modal.show();
+                },
+                error: function (xhr) {
+                    let mensagem = xhr.responseText || 'Erro ao carregar';
+                    alert(mensagem);
+                    console.error('Erro da controller:', mensagem);
+                }
+            })
+        }
+    </script>
+}
+

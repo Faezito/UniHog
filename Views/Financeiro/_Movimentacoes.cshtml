@@ -1,0 +1,44 @@
+﻿@model List<MovimentacaoFinanceiraModel>
+
+@if (Model.Count() <= 0)
+{
+    @await Component.InvokeAsync("TabelaSemRegistros")
+}
+else
+{
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <td class="text-center">Tipo</td>
+                <td class="text-center">Descrição</td>
+                <td class="text-center">Valor</td>
+                <td class="text-center">Parcela</td>
+                <td class="text-center">Valor Parcela</td>
+                <td class="text-center">Valor Restamte</td>
+                <td class="text-center">Quem Liberou</td>
+                <td class="text-center">Data</td>
+                <td class="text-center">Registro</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                decimal? valorRestante = ((item.QuantidadeParcelas - item.Parcela) + 1) * item.ValorParcela ;
+
+                <tr class="lista-hover">
+                    <td onclick="abrirModal(@item.ID)" class="@item.TipoCor text-center">@item.TipoTxt</td>
+                    <td onclick="abrirModal(@item.ID)" class=" text-start">@(item.MotivoID > 0 ? $"{item.Motivo} - {item.Descricao}" : item.Descricao)</td>
+                    <td onclick="abrirModal(@item.ID)" class=" text-end">@item.Valor?.ToString("N2")</td>
+                    <td onclick="abrirModal(@item.ID)" class=" text-center">@(item.QuantidadeParcelas > 0 ? item.Parcela/@item.QuantidadeParcelas : "")</td>
+                    <td onclick="abrirModal(@item.ID)" class=" text-end">@item.ValorParcela?.ToString("N2")</td>
+                    <td onclick="abrirModal(@item.ID)" class=" text-end">@valorRestante?.ToString("N2")</td>
+                    <td onclick="abrirModal(@item.ID)" class=" text-start">@item.Usuario</td>
+                    <td onclick="abrirModal(@item.ID)" class=" text-center">@item.DataMovimentacao?.ToShortDateString()</td>
+                    <td onclick="abrirModal(@item.ID)" class=" text-center">@item.UsuarioLogadoString - @item.DataAlteracao</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

@@ -1,0 +1,133 @@
+﻿@model TiposModel;
+
+@{
+    string titulo = Model.Selecao switch
+    {
+        1 => "Cadastro de Tipo de Pessoa",
+        2 => "Cadastro de Tipo de Endereço",
+        3 => "Cadastro de Situação",
+        _ => ""
+    };
+
+    ViewData["Title"] = titulo;
+}
+
+<div class="row justify-content-end">
+    <div class="col text-start">
+        <h5 class="text-uppercase">@titulo</h5>
+    </div>
+    <div class="col-auto text-end">
+        <a role="button" class="btn btn-secondary btn-sm" asp-action="Admin" asp-controller="MenuUsuario">
+            <i class="fa-solid fa-reply"></i>&nbsp; Voltar
+        </a>
+    </div>
+</div>
+
+<hr />
+
+<form method="post" id="form-cadastro">
+    <div class="col-12">
+        <div class="row mb-3">
+            <div class="col-12 col-sm-2">
+                <label asp-for="ID">ID</label>
+                @if (Model.ID.HasValue)
+                {
+                    <input type="text" class="form-control" value="@Model.ID" readonly>
+                }
+                else
+                {
+                    <input type="text" class="form-control" asp-for="ID">
+                }
+
+                <input type="hidden" class="form-control" asp-for="ID">
+                <input type="hidden" class="form-control" asp-for="Selecao">
+            </div>
+            <div class="col-12 col-sm-5">
+                <label asp-for="Descricao">Tipo</label>
+                <input type="text" class="form-control" asp-for="Descricao">
+            </div>
+            @if (Model.Selecao == 3)
+            {
+                <div class="col-12 col-sm-5">
+                    <label asp-for="Cor"> Cor</label>
+                    <select asp-for="Cor" class="form-select">
+                        <option class="text-vinhoclaro" value="text-vinhoclaro">Vinho Claro</option>
+                        <option class="text-vinhoescuro" value="text-vinhoescuro">Vinho Escuro</option>
+                        <option class="text-ouro" value="text-ouro">Ouro</option>
+                        <option class="text-ouroescuro" value="text-ouroescuro">Ouro Escuro</option>
+                        <option class="text-orange" value="text-orange">Laranja</option>
+                        <option class="text-darkblue" value="text-darkblue">Azul Escuro</option>
+                        <option class="text-primary" value="text-primary">Azul</option>
+                        <option class="text-secondary" value="text-secondary">Cinza</option>
+                        <option class="text-success" value="text-success">Verde</option>
+                        <option class="text-danger" value="text-danger">Vermelho</option>
+                        <option class="text-warning" value="text-warning">Amarelo</option>
+                        <option class="text-info" value="text-info">Azul Claro</option>
+                        <option class="text-dark" value="text-dark">Preto</option>
+                    </select>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <div class="row mb-3">
+        <div class="col-auto">
+            <button type="button" id="btnSalvar" class="btn btn-success">
+                <span id="texto-salvar">
+                    <i class="fa-solid fa-floppy-disk"></i>&nbsp;
+                    Salvar
+                </span>
+                <span id="loading" style="display:none; text-align:center;" class="spinner-border spinner-border-sm" role="status"></span>
+            </button>
+        </div>
+        <div class="col-auto">
+            <a asp-controller="Tipo" asp-action="Lista" asp-route-rotaId="@Model.Selecao" class="btn btn-secondary">
+                <i class="fa-solid fa-reply"></i>&nbsp;
+                Voltar
+            </a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $('#btnSalvar').on('click', function () {
+            $.ajax({
+                url: '/Tipo/Cadastro',
+                type: 'POST',
+                data: $('#form-cadastro').serialize(),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                beforeSend: function () {
+                    $('#btnSalvar').prop('disabled', true);
+                },
+                complete: function () {
+                    $('#btnSalvar').prop('disabled', false);
+                }
+            })
+            .done(function (response) {
+                if (response.success) {
+                    window.location.href = response.redirectUrl;
+                }
+            })
+            .fail(function (xhr) {
+                if (xhr.responseJSON) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: xhr.responseJSON.title ?? 'Erro',
+                        html: xhr.responseJSON.detail
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro',
+                        text: 'Erro inesperado ao processar a requisição.'
+                    });
+                }
+            });
+        });
+
+    </script>
+}

@@ -1,0 +1,142 @@
+﻿@model InteressadoModel
+
+@{
+    ViewData["Title"] = "Listagem de Interessados";
+}
+
+@await Component.InvokeAsync("TopoMenus", new {
+menu = "Interessados",
+ajuda = true,
+rota = @Url.Action("Cadastros", "Menu")
+ })
+
+<hr />
+<div class="row">
+    <div id="tabela-pessoas" class="col-12 table-responsive table-responsive-sm">
+    </div>
+</div>
+
+<div id="area-modal"></div>
+
+
+<!-- Modal Ajuda -->
+<div class="modal modal-lg fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Ajuda
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fs-7">
+                    Esta página serve para listagem e visualização de pessoas cadastradas nos projetos, e integrar os interessados em
+                    estudo bíblico ao sistema.
+                </p>
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Ações
+                    </h5>
+                    <div class="row table-responsive">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td>
+                                    <a href="#" class="btn btn-success btn-sm"
+                                       data-bs-toggle="tooltip" data-bs-title="Integrar ao sistema">
+                                        <i class="fa-solid fa-upload"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    O botão <b class="text-warning-emphasis">DOURADO</b> serve para integrar o interessado ao sistema, seguindo para a página de cadastro completa. <br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Visualizar no Google Maps">
+                                        <i class="fa-solid fa-map-location-dot"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    O botão <b class="text-danger-emphasis">VINHO</b>, como em todo o sistema, serve para visualizar o endereço do interessado no Google Maps.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#pesquisar').on('submit', function (e) {
+            e.preventDefault()
+            carregarTabela();
+        });
+
+        $(document).ready(function (){
+            carregarTabela();
+        })
+
+        function carregarTabela() {
+            $.ajax({
+                url: '/Interessado/Pesquisar',
+                type: 'POST',
+                dataType: 'html',
+                data: $('#pesquisar').serialize(),
+
+                beforeSend: function () {
+                },
+
+                success: function (resultado) {
+                    $("#tabela-pessoas").html(resultado);
+                },
+
+                complete: function () {
+                    initTooltips();
+                },
+
+                error: function () {
+                }
+            });
+        }
+
+        function abrirModal(id) {
+            $.ajax({
+                url: '/Interessado/Detalhes?id=' + id,
+                type: 'POST',
+                dataType: 'html',
+                success: function(html)
+                {
+                    $('#area-modal').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('modalInteressado'))
+                    modal.show();
+                },
+                error: function (xhr) {
+                    let mensagem = xhr.responseText || 'Erro ao carregar usuário';
+                    alert(mensagem);
+                    console.error('Erro da controller:', mensagem);
+                }
+            })
+        }
+
+        $(document).on('click', '.btn-deletar', function (e) {
+            fn_deletar(e, this, '@Url.Action("Deletar", "Interessado")')
+        });
+
+        $(document).on('submit',"#form-whatsapp", function(e){
+            e.preventDefault();
+
+            let nome = $("#nomeEstudante").val()
+            let enderecoCompleto = $("#enderecoEstudante").val()
+            let enderecoMaps = $("#enderecoMaps").val()
+            let telefone = $("#telefoneDestino").val()
+            enviarWhatsApp(nome, enderecoCompleto, enderecoMaps, telefone)
+        })
+
+    </script>
+}
+

@@ -1,0 +1,348 @@
+﻿@model List<CestaBasicaBeneficiarioModel>
+
+@{
+    ViewData["Title"] = "Entrega de Cesta Básica";
+}
+
+<div class="row justify-content-end">
+    <div class="col text-start">
+        <h5 class="text-uppercase">ENTREGA DE CESTAS BÁSICAS</h5>
+    </div>
+    <div class="col-auto text-end">
+        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalAjuda">
+            <i class="fa-solid fa-question"></i>&nbsp; AJUDA
+        </button>
+        <a asp-controller="Menu" asp-action="CestaBasica" class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-reply"></i>&nbsp;
+            Voltar
+        </a>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+@* APTOS PARA RECEBER CESTA *@
+<div class="row">
+    <div class="col-12 table-responsive">
+        <table class="table table-borderless table-striped table-hover table-mobile table-success">
+            <thead>
+                <tr>
+                    <td class="text-center fw-bold text-uppercase fs-5" colspan="99">PODEM RECEBER CESTA</td>
+                </tr>
+                <tr>
+                    <td class="text-center fw-bold text-uppercase">Beneficiário</td>
+                    <td class="text-center fw-bold text-uppercase">Telefone</td>
+                    <td class="text-center fw-bold text-uppercase">Presenças</td>
+                    <td class="text-center fw-bold text-uppercase">Faltas</td>
+                    <td class="text-center fw-bold text-uppercase" colspan="2">Endereço</td>
+                </tr>
+            </thead>
+            <tbody class="border-top border-dark">
+                @foreach (var pessoa in Model.Where(x => x.Presencas >= 4 && x.Entregue == false))
+                {
+                    var enderecoEncoded = Uri.EscapeDataString(pessoa.EnderecoCompleto ?? " ");
+                    var url = $"https://www.google.com/maps/search/?api=1&query={enderecoEncoded}";
+
+                    <tr class="lista-hover">
+                        <td data-id="@pessoa.PessoaID" class="editar">@pessoa.NomeCompleto</td>
+                        <td data-id="@pessoa.PessoaID" class="editar text-center">@pessoa.Telefone.FormatarTelefone()</td>
+                        <td data-id="@pessoa.PessoaID" class="editar text-center">@pessoa.Presencas</td>
+                        <td data-id="@pessoa.PessoaID" class="editar text-center">@pessoa.Faltas</td>
+                        <td data-id="@pessoa.PessoaID" class="editar">
+                            <span>
+                                @pessoa.EnderecoReduzido
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-green btn-sm w-auto" data-bs-toggle="modal" data-bs-target="#modalWhatsapp">
+                                <i class="fa-solid fa-share-from-square"></i>
+                            </button>
+                            <a href="@url" target="_blank" class="btn btn-primary btn-sm">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                            </a>
+                            <!-- MODAL COMPARTILHAMENTO -->
+                            <div class="modal fade" id="modalWhatsapp" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Compartilhar</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <form id="form-whatsapp" class="form" method="post">
+                                                    <input type="hidden" id="nomeEstudante" value="@pessoa.NomeCompleto" />
+                                                    <input type="hidden" id="enderecoEstudante" value="@($"{pessoa.EnderecoReduzido}" ?? "*Sem endereço cadastrado*")" />
+                                                    <input type="hidden" id="enderecoMaps" value="@url" />
+
+                                                    <label for="telefoneDestino" class="form-label w-auto">Telefone Destino (Digite apenas números, com DDD. Exemplo: 21965584777)</label>
+                                                    <input type="text" class="form-control form-control-sm" id="telefoneDestino" name="telefoneDestino" />
+                                                    <button type="submit" class="btn btn-primary mt-3">Enviar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    @* NÃO PODEM RECEBER CESTA *@
+    <div class="col-12 table-responsive">
+        <table class="table table-responsive table-bordered table-mobile mt-5 table-secondary">
+            <thead>
+                <tr>
+                    <td class="text-center fw-bold text-uppercase fs-5" colspan="99">NÃO PODEM RECEBER CESTA</td>
+                </tr>
+                <tr>
+                    <td class="text-center fw-bold text-uppercase">Beneficiário</td>
+                    <td class="text-center fw-bold text-uppercase">Telefone</td>
+                    <td class="text-center fw-bold text-uppercase">Presenças</td>
+                    <td class="text-center fw-bold text-uppercase">Faltas</td>
+                    <td class="text-center fw-bold text-uppercase">Endereço</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pessoa in Model.Where(x => x.Presencas < 4 && x.Faltas < 3))
+                {
+                    var enderecoEncoded = Uri.EscapeDataString(pessoa.EnderecoCompleto ?? " ");
+                    var url = $"https://www.google.com/maps/search/?api=1&query={enderecoEncoded}";
+
+                    <tr>
+                        <td class="">@pessoa.NomeCompleto</td>
+                        <td class="text-center">@pessoa.Telefone.FormatarTelefone()</td>
+                        <td class="text-center">@pessoa.Presencas</td>
+                        <td class="text-center">@pessoa.Faltas</td>
+                        <td class="d-flex justify-content-between">
+                            <span>
+                                @pessoa.EnderecoReduzido
+                            </span>
+                            <span>
+                                <a href="@url" target="_blank" class="btn btn-primary btn-sm">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                </a>
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @* CESTAS ENTREGUES *@
+    <div class="col-12 table-responsive">
+        <table class="table table-responsive table-bordered table-mobile mt-5 table-primary">
+            <thead>
+                <tr>
+                    <td class="text-center fw-bold text-uppercase fs-5" colspan="99">CESTAS ENTREGUES</td>
+                </tr>
+                <tr>
+                    <td class="text-center fw-bold text-uppercase">Beneficiário</td>
+                    <td class="text-center fw-bold text-uppercase">Telefone</td>
+                    <td class="text-center fw-bold text-uppercase">Presenças</td>
+                    <td class="text-center fw-bold text-uppercase">Faltas</td>
+                    <td class="text-center fw-bold text-uppercase">Endereço</td>
+                    <td class="text-center fw-bold text-uppercase">Quem entregou</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pessoa in Model.Where(x => x.Entregue == true))
+                {
+                    <tr>
+                        <td class="">@pessoa.NomeCompleto</td>
+                        <td class="text-center">@pessoa.Telefone.FormatarTelefone()</td>
+                        <td class="text-center">@pessoa.Presencas</td>
+                        <td class="text-center">@pessoa.Faltas</td>
+                        <td class="">@pessoa.EnderecoReduzido</td>
+                        <td class="">@pessoa.Entregador - @pessoa.DataEntrega?.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* DESCLASSIFICADOS *@
+    <div class="col-12 table-responsive">
+        <table class="table table-responsive table-bordered table-mobile mt-5 table-danger">
+            <thead>
+                <tr>
+                    <td class="text-center fw-bold text-uppercase fs-5" colspan="99">DESCLASSIFICADOS</td>
+                </tr>
+                <tr>
+                    <td class="text-center fw-bold text-uppercase">Beneficiário</td>
+                    <td class="text-center fw-bold text-uppercase">Telefone</td>
+                    <td class="text-center fw-bold text-uppercase">Endereço</td>
+                    <td class="text-center fw-bold text-uppercase">Presenças</td>
+                    <td class="text-center fw-bold text-uppercase">Faltas</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pessoa in Model.Where(x => x.Faltas >= 3))
+                {
+                    <tr>
+                        <td class="">@pessoa.NomeCompleto</td>
+                        <td class="text-center">@pessoa.Telefone.FormatarTelefone()</td>
+                        <td class="">@pessoa.EnderecoReduzido</td>
+                        <td class="text-center">@pessoa.Presencas</td>
+                        <td class="text-center">@pessoa.Faltas</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Modal Ajuda -->
+<div class="modal modal-lg fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Ajuda
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fs-7">Esta página serve para visualizar a situação dos participantes do projeto Cesta Básica, e registrar as entregas efetuadas.</p>
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Visualizar no Google Maps
+                        <button type="button" class="btn btn-primary btn-sm">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </button>
+                    </h5>
+                    <p class="fs-7">
+                        Em todo o sistema, este botão serve para visualizar o endereço da pessoa no Google Maps.
+                    </p>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Organização
+                    </h5>
+                    <p>
+                        Esta página se divide em 4 seções:
+                    </p>
+                    <ul>
+                        <li><b>Podem receber cesta</b> - Pessoas que tiveram 4 presenças no mês, e estão aptas para receber a cesta básica.</li>
+                        <li><b>Cestas Entregues</b> - Relatório de Cestas que JÁ foram entregues.</li>
+                        <li><b>Não podem receber cesta</b> - Pessoas que ainda não atingiram o mínimo de presenças para receber a cesta básica.</li>
+                        <li><b>Desclassificados</b> - Relatório de pessoas que foram desclassificadas do projeto, por terem mais de 3 faltas no mês.</li>
+                    </ul>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Entrega de Cesta
+                    </h5>
+                    <p>
+                        O clicar em uma das pessoas da tabela <i class="text-primary">PODEM RECEBER CESTA</i>, um balão abrirá, permitindo que seja registrada a saída da cesta básica.
+                        Basta preencher com a Data e Hora da entrega, e qual tipo de cesta foi entregue, para que o sistema contabilize e dê baixa no estoque. <br />
+                    </p>
+
+                    @if (this.User.GetUserTipoId() < 3)
+                    {
+                        <p class="fw-light">
+                            Você, administrador ou similar, pode cadastrar manualmente quem foi que entregou a cesta, basta selecionar a pessoa. <br />
+                            <i class="text-danger">Esta opção só é visível para administradores, para baixas manuais, caso o responsável pela entrega esqueça ou não consiga dar baixa no momento.</i>
+                        </p>
+                    }
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Deletar
+                        <button type="button" class="btn btn-danger btn-sm w-auto">
+                            <i class="fas fa-trash-can"></i>
+                        </button>
+                    </h5>
+                    <p class="fs-7">O botão de Lixeira ao lado da cesta, assim como em todo o sistema, significa DELETAR, permitindo que você <b class="text-danger">delete a cesta </b>.</p>
+                    <p class="fw-bold text-warning-emphasis">
+                        ATENÇÃO. Este botão não serve para retirar itens do estoque, ele DELETA A CESTA. Para remover itens do estoque, use o botão de EDIÇÃO (Lápis).
+                    </p>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h6>
+                        Descrição - é o Nome da Cesta Básica, para identificá-la.
+                    </h6>
+                    <h6>
+                        Itens - Listagem de itens que compõe a cesta.
+                    </h6>
+                    <h6>
+                        Estoque - Quantidade de cestas disponíveis.
+                    </h6>
+                    <h6>
+                        Estoque Mínimo - Quantidade mínima de cestas para o sistema alertar a necessidade de repor o estoque.
+                    </h6>
+
+                </section>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="area-modal"></div>
+
+@section Scripts {
+    <script>
+        $(document).on('click', '#btnSalvar',  function (evt) {
+            fn_submit4(evt, 'form-edicao', '@Url.Action("CadastroEntrega", "CestaBasica")', btnSelector = '#btnSalvar')
+        });
+
+        $(document).on('click', '#btnCadastrar',  function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("CadastroEntrega", "CestaBasica")', btnSelector = '#btnCadastrar')
+        });
+
+        $(document).on('click', '.editar', async function(e){
+            const id = $(this).data('id');
+            await cadastroEntrega(id);
+            carregarMask();
+        })
+
+
+        // TRANSFORMAR EM WRAPPER
+        async function cadastroEntrega(id) {
+            $.ajax({
+                url: '/CestaBasica/CadastroEntrega?id=' + id,
+                type: 'GET',
+                dataType: 'html',
+                success: function(html)
+                {
+                    $('#area-modal').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('modalCesta'))
+                    modal.show();
+                },
+                error: function (xhr) {
+                    let mensagem = xhr.responseText || 'Erro ao carregar';
+                    alert(mensagem);
+                    console.error('Erro da controller:', mensagem);
+                }
+            })
+        }
+
+        $(document).on('hidden.bs.modal', '#modalCesta', function() {
+            fn_limpaModal();
+        })
+
+        $(document).on('submit',"#form-whatsapp", function(e){
+            e.preventDefault();
+
+            let nome = $("#nomeEstudante").val()
+            let enderecoCompleto = $("#enderecoEstudante").val()
+            let enderecoMaps = $("#enderecoMaps").val()
+            let telefone = $("#telefoneDestino").val()
+            enviarWhatsApp(nome, enderecoCompleto, enderecoMaps, telefone)
+        })
+    </script>
+}

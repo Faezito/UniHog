@@ -1,0 +1,14 @@
+﻿@model List<UsuarioModel>
+
+@foreach (var usuario in Model)
+{
+    <option value="@usuario.PessoaID">@usuario.NomeCompleto</option>
+}
+
+
+
+@*
+
+@await Component.InvokeAsync("DropPessoasSituacoes", new { usuarioId = PessoaID })
+
+*@

@@ -1,0 +1,61 @@
+﻿@model APIModel;
+@{
+    ViewData["Title"] = "APIs do Sistema";
+}
+
+<div class="row mb-2">
+    <h2 class="text-uppercase">
+        Cadastro de API
+    </h2>
+</div>
+
+<hr />
+
+<form method="post" id="form-cadastro">
+    <div class="row mb-3">
+        <div class="col-12 col-sm-1">
+            <input type="hidden" asp-for="ID" />
+            <label asp-for="ID">Código</label>
+            <input type="text" class="form-control" asp-for="COD" placeholder="Código" required>
+        </div>
+        <div class="col-12 col-sm-3">
+            <label asp-for="Descricao">Descrição</label>
+            <input type="text" class="form-control" asp-for="Descricao" placeholder="Descrição" required>
+        </div>
+        <div class="col-12 col-sm-4">
+            <label asp-for="Token">Token/Chave</label>
+            <input type="text" class="form-control" asp-for="Token" placeholder="Token/Chave">
+        </div>
+        <div class="col-12 col-sm-3">
+            <label asp-for="Modelo">Modelo/Versão</label>
+            <input type="text" class="form-control" asp-for="Modelo" placeholder="Modelo/Versão">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 col-sm-4">
+            <label asp-for="Url">Url</label>
+            <input type="text" class="form-control" asp-for="Url" placeholder="Url">
+        </div>
+        <div class="col-12 col-sm-4">
+            <label asp-for="Usuario">Usuário</label>
+            <input type="text" class="form-control" asp-for="Usuario" placeholder="Usuário">
+        </div>
+        <div class="col-12 col-sm-4">
+            <label asp-for="Senha">Senha</label>
+            <input type="text" class="form-control" asp-for="Senha" placeholder="Senha">
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("FormFooter", new { action = "ListarAPIs", controller = "ServicosExternos" })
+
+</form>
+
+@section Scripts {
+    <script>
+        $(document).on('click', '#btnSalvar',  function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("CadastroAPI", "ServicosExternos")', btnSelector = '#btnSalvar')
+        });
+
+
+    </script>
+}

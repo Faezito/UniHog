@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Configurações do sistema";
+}
+
+<div class="container-fluid">
+    <div class="">
+        @await Component.InvokeAsync("TopoMenus", new { menu = "Configurações", rota = @Url.Action("Index", "Menu") })
+    </div>
+
+    <hr class="mb-4" />
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="alert alert-light shadow py-3">
+                <h5 class="text-secondary ps-4">Configurações do Sistema</h5>
+                <hr />
+                <ol>
+                    <li><a class="text-decoration-none text-reset" asp-action="Areas" asp-controller="Atendimento">Menus</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="alert alert-light shadow py-3">
+                <h5 class="text-secondary ps-4">Serviços Externos</h5>
+                <hr />
+                <ol>
+                    <li><a class="text-decoration-none text-reset" asp-route-emailID="1" asp-action="CadastroEmail" asp-controller="ServicosExternos">E-mail do Sistema</a></li>
+                    @* <li><a class="text-decoration-none text-reset" asp-action="CadastroEmail" asp-controller="ServicosExternos">Novo E-mail do Sistema</a></li> *@
+                    @if (this.User.GetUserTipoId() < 0)
+                    {
+                        <li><a class="text-decoration-none text-reset" asp-action="ListarAPIs" asp-controller="ServicosExternos">APIs</a></li>
+                        <li><a class="text-decoration-none text-reset" asp-action="CadastroAPI" asp-controller="ServicosExternos">Nova API</a></li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+
+</div>

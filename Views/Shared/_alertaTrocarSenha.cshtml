@@ -1,0 +1,12 @@
+﻿<div class="alert alert-warning" role="alert">
+    <h4 class="alert-heading text-center"><i class="fa-solid fa-triangle-exclamation"></i>&nbsp; Aviso</h4>
+    <p>
+        Você está utilizando a senha temporária enviada por e-mail, por segurança, recomendamos a troca imediata da mesma.
+        <a class="d-block text-center mt-3"
+           asp-controller="Usuario"
+           asp-action="Editar"
+           asp-route-pessoaId="@this.User.GetUserId()">
+            TROCAR SENHA
+        </a>
+    </p>
+</div>

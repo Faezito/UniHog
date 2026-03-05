@@ -1,0 +1,35 @@
+﻿@using Z4.Bibliotecas
+@model MovimentacaoFinanceiraModel
+
+<div class="modal modal-lg fade" id="modalNF" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Nota Fiscal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="w-auto col-12">
+                        @if (string.IsNullOrEmpty(Model.NotaFiscalURL))
+                        {
+                            <h1>Sem foto de nota fiscal</h1>
+                        }
+                        else
+                        {
+                            <img src='@Model.NotaFiscalURL' class="rounded-1 mt-2 w-100">
+                        }
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

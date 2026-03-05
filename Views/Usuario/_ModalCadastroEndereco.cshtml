@@ -1,0 +1,93 @@
+﻿@model UsuarioModel
+
+<div class="modal modal-lg fade" id="modalUsuario" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Adicionar Endereço</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="cep" name="CEP" placeholder=" ">
+                            <label for="cep">CEP</label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="rua" name="Rua" placeholder=" ">
+                            <label for="rua">Rua</label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="Numero" name="Numero" required placeholder=" ">
+                            <label for="Numero">Número</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="bairro" name="Bairro" placeholder=" ">
+                            <label for="bairro">Bairro</label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="Cidade" name="Cidade" placeholder=" ">
+                            <label for="Cidade">Cidade</label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="Estado" name="Estado" placeholder=" ">
+                            <label for="Estado">Estado</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="uf" name="UF" placeholder=" ">
+                            <label for="Estado">UF</label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="uf" name="Complemento" placeholder=" ">
+                            <label for="Estado">Complemento</label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="uf" name="Referencia" placeholder=" ">
+                            <label for="Estado">Referência</label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <select name="EnderecoTipoID" class="form-select py-3">
+                            <option disabled selected>TIPO</option>
+                            @await Component.InvokeAsync("DropEnderecosTipos")
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

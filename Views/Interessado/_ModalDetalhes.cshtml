@@ -1,0 +1,87 @@
+﻿@using Z4.Bibliotecas
+@model InteressadoModel
+
+
+@{
+    var enderecoEncoded = Uri.EscapeDataString(Model.Enderecos.FirstOrDefault()?.EnderecoCompleto ?? " ");
+    var urlEndereco = $"https://www.google.com/maps/search/?api=1&query={enderecoEncoded}";
+}
+
+<div class="modal modal-lg fade" id="modalInteressado" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="w-auto">
+                        <img src='@(Model.FotoPerfilURL ?? "/img/users/foto_placeholder.png")' style="width: 9rem;" class="rounded-1 mt-2">
+                    </div>
+
+                    <div class="col-12 col-sm">
+                        <div class="row">
+                            <div class="col-12 col-sm-8">
+                                <p class="p-1 m-0"><b>Nome:</b> @Model.NomeCompleto</p>
+                                <p class="p-1 m-0"><b>Idade:</b> @Model.DataNascimento.CalcularIdadeString() (@Model.DataNascimento.ToString("dd/MM/yyyy"))</p>
+                                <p class="p-1 m-0"><b>Gênero:</b> @Model.GeneroTxt</p>
+                                <p class="p-1 m-0"><b>Telefone:</b> @Model.Telefone.FormatarTelefone()</p>
+                                <p class="p-1 m-0"><b>Projeto:</b> @Model.Projeto</p>
+                            </div>
+
+                            <div class="row container-fluid justify-content-end gap-2">
+                                <button type="button" class="btn btn-green btn-sm w-auto" data-bs-toggle="modal" data-bs-target="#modalWhatsapp">
+                                    <i class="fa-solid fa-share-from-square"></i>&nbsp; COMPARTILHAR
+                                </button>
+                                <a class="btn btn-success w-auto" asp-action="Integrar" asp-controller="Interessado" asp-route-id="@Model.PessoaID">
+                                    Cadastrar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container row mx-auto justify-content-center mt-3">
+                    @await Component.InvokeAsync("TabelaEnderecos", new { pessoaId = Model.PessoaID, podeExcluir = false })
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL COMPARTILHAMENTO -->
+<div class="modal fade" id="modalWhatsapp" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Compartilhar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <form id="form-whatsapp" class="form" method="post">
+                        <input type="hidden" id="nomeEstudante" value="@Model.NomeCompleto" />
+                        <input type="hidden" id="enderecoEstudante" value="@($"{Model.Enderecos.FirstOrDefault()?.EnderecoReduzido} - {Model.Enderecos.FirstOrDefault()?.Bairro}" ?? "")" />
+                        <input type="hidden" id="enderecoMaps" value="@urlEndereco" />
+
+                        <label for="telefoneDestino" class="form-label w-auto">Telefone Destino (Digite apenas números, com DDD. Exemplo: 21965584777)</label>
+                        <input type="text" class="form-control form-control-sm" id="telefoneDestino" name="telefoneDestino" />
+                        <button type="submit" class="btn btn-primary mt-3">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

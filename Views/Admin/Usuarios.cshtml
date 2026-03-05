@@ -1,0 +1,232 @@
+﻿@model UsuarioRQModel
+
+@{
+    int? rotaId = ViewBag.rotaId;
+    string titulo = rotaId switch
+    {
+        1 => "Gestão de Usuários",
+        2 => "Gestão de Estudantes",
+        _ => "Gestão de Pessoas"
+    };
+
+    ViewData["Title"] = titulo;
+}
+
+<div class="row justify-content-end">
+    <div class="col justify-content-end text-end">
+        <form class="" id="pesquisar">
+            <div class="row justify-content-between">
+                <div class="col-12">
+                    <h3 class="text-secondary text-uppercase text-sm-start text-center mt-2">@titulo</h3>
+                </div>
+                <div class="col-12">
+                    <div class="row justify-content-center">
+                        <input type="hidden" value="@rotaId" name="rotaId" />
+
+                        <div class="col-6 col-sm-3 col-xl">
+                            <label asp-for="NomeCompleto" class="form-label-sm w-100 text-start">Nome</label>
+                            <input type="text" Name="NomeCompleto" id="NomeCompleto" class="form-control form-control-sm w-100" placeholder="Pesquisar" />
+                        </div>
+                        <div class="col-6 col-sm-3 col-xl">
+                            <label asp-for="Bairro" class="form-label-sm w-100 text-start">Bairro</label>
+                            <select asp-for="Bairro" class="form-select form-select-sm w-100">
+                                <option selected value="">BAIRRO</option>
+                                @await Component.InvokeAsync("DropBairros")
+                            </select>
+                        </div>
+                        <div class="col-6 col-sm-3 col-xl">
+                            <label asp-for="TipoID" class="form-label-sm w-100 text-start">Cargo</label>
+                            <select asp-for="TipoID" class="form-select form-select-sm w-100">
+                                @if (rotaId == 2)
+                                {
+                                    <option selected disabled value="">Estudante</option>
+                                }
+                                else
+                                {
+                                    <option selected value="">SELECIONE</option>
+                                    @await Component.InvokeAsync("DropUsuariosTipos", new { usuarioId = this.User.GetUserId() })
+                                }
+                            </select>
+                        </div>
+                        <div class="col-6 col-sm-3 col-xl">
+                            <label asp-for="SituacaoID" class="form-label-sm w-100 text-start">Situação</label>
+                            <select asp-for="SituacaoID" class="form-select form-select-sm w-100">
+                                <option selected value="">SELECIONE</option>
+                                @await Component.InvokeAsync("DropPessoasSituacoes")
+                            </select>
+                        </div>
+                        <div class="col-12 col-xl-4 d-flex justify-content-between mt-3 mt-xl-0">
+                            <button type="submit" class="btn btn-primary btn-sm w-30 mt-auto">
+                                <i class="fa-solid fa-magnifying-glass"></i>&nbsp; Pesquisar
+                            </button>
+                            <a role="button" class="btn btn-success btn-sm w-30 mt-auto" asp-action="Cadastro" asp-controller="Usuario">
+                                <i class="fa-solid fa-user-plus"></i>&nbsp; NOVO
+                            </a>
+                            <a asp-controller="Menu" asp-action="Cadastros" class="btn btn-secondary btn-sm w-30 mt-auto">
+                                <i class="fa-solid fa-reply"></i>&nbsp;
+                                Voltar
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+<div id="tabela-pessoas" class="col-12 table-responsive table-responsive-sm">
+</div>
+
+<div id="area-modal"></div>
+
+@section Scripts {
+    <script>
+        $('#pesquisar').on('submit', function (e) {
+            e.preventDefault()
+            carregarTabela(1);
+        });
+
+        $(document).ready(function (){
+            carregarTabela(1);
+        })
+
+        $("#NomeCompleto").on('keyup', function () {
+            carregarTabela(1);
+        });
+
+        let timeout = null;
+
+        $("#NomeCompleto").on('keyup', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                carregarTabela(1);
+            }, 300);
+        });
+
+        function carregarTabela(pagina = 1) {
+            const titulo = $('#NomeCompleto').val();
+
+            $.ajax({
+                url: '/Usuario/ListarUsuarios?pagina=' + pagina,
+                type: 'POST',
+                dataType: 'html',
+                data: $('#pesquisar').serialize(),
+
+                beforeSend: function () {
+                },
+
+                success: function (resultado) {
+                    $("#tabela-pessoas").html(resultado);
+                },
+
+                complete: function () {
+                },
+
+                error: function () {
+                }
+            });
+        }
+
+        function abrirModal(id) {
+            $.ajax({
+                url: '/Usuario/UsuarioDetalhes?id=' + id,
+                type: 'POST',
+                dataType: 'html',
+                success: function(html)
+                {
+                    $('#area-modal').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('modalUsuario'))
+                    modal.show();
+                },
+                error: function (xhr) {
+                    let mensagem = xhr.responseText || 'Erro ao carregar usuário';
+                    alert(mensagem);
+                    console.error('Erro da controller:', mensagem);
+                }
+            })
+        }
+
+        $(document).on('click', '.btn-deletar', function (e) {
+            fn_deletar(e, this, '@Url.Action("DeletarUsuario", "Usuario")')
+        });
+
+        $(document).on('submit',"#form-whatsapp", function(e){
+            e.preventDefault();
+
+            let nome = $("#nomeEstudante").val()
+            let enderecoCompleto = $("#enderecoEstudante").val()
+            let enderecoMaps = $("#enderecoMaps").val()
+            let telefone = $("#telefoneDestino").val()
+            enviarWhatsApp(nome, enderecoCompleto, enderecoMaps, telefone)
+        })
+
+
+        $(document).on('click', '.btnSenha', function(evt) {
+            evt.preventDefault();
+
+            const form = $(this).closest("form");
+
+            Swal.fire({
+                title: "Realmente deseja reiniciar a senha deste usuário?",
+                icon: "warning",
+                text: "Esta ação é irreversível. A senha nova será enviada para o e-mail cadastrado neste usuário.",
+                showDenyButton: true,
+                denyButtonText: "Não",
+                confirmButtonText: "Sim"
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Usuario/ResetarSenha',
+                        type: 'POST',
+                        data: form.serialize(),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        beforeSend: function () {
+                            $('.btn-deletar').prop('disabled', true);
+                        },
+                        complete: function () {
+                            $('.btn-deletar').prop('disabled', false);
+                        }
+                    })
+                        .done(function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: response?.title ?? 'Sucesso',
+                                html: response?.detail ?? 'Solicitação concluída com sucesso!'
+                            }).then(() => {
+                                if (response.redirectUrl) {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            });
+                        })
+                        .fail(function (xhr) {
+                            if (xhr.responseJSON) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: xhr.responseJSON.title ?? 'Erro',
+                                    html: xhr.responseJSON.detail
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erro',
+                                    text: 'Erro inesperado ao processar a requisição.'
+                                });
+                            }
+                        });
+                        }
+                    });
+                })
+
+        // FECHAR MODAIS CORRETAMENTE
+        $(document).on('click', '.btn-close', function(){
+            fn_limpaModal();
+        })
+    </script>
+}
+

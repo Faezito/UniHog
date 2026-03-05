@@ -1,0 +1,51 @@
+﻿@model EspecialidadeModel
+
+<div class="modal fade" id="modalEspecialidade" tabindex="-1" aria-labelledby="modalEspecialidadeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Editar
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="form-edicao">
+                <div class="modal-body">
+                    <div class="row mb-3">
+                            <input type="hidden" asp-for="ID">
+                        <div class="col">
+                            <label for="Tipo">Descrição</label>
+                            <input type="text" class="form-control" asp-for="Descricao" required>
+                        </div>
+                        <div class="col">
+                            <label for="Tipo">Area</label>
+                            <select class="form-select form-select" asp-for="AreaID">
+                                @await Component.InvokeAsync("DropAreasEspecializacao")
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <button type="button" id="btnSalvar" class="btn btn-success btn-sm">
+                                <span id="texto-salvar">
+                                    <i class="fa-solid fa-floppy-disk"></i>&nbsp;
+                                    Salvar
+                                </span>
+                                <span id="loading" style="display:none; text-align:center;" class="spinner-border spinner-border-sm" role="status"></span>
+                            </button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fa-solid fa-reply"></i>&nbsp;
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

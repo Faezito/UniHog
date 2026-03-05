@@ -1,0 +1,40 @@
+﻿@{
+    string rota = ViewBag.Rota;
+    string menu = ViewBag.Menu;
+    bool botaoAjuda = ViewBag.Ajuda;
+}
+
+<div class="row justify-content-between">
+    <div class="col-12 col-md-6 text-center text-md-start mt-auto">
+        <h4 class="text-secondary fs-3 d-block d-md-none text-uppercase w-auto">
+            @menu
+        </h4>
+
+        <h4 class="text-secondary fs-4 d-md-block d-none  text-uppercase w-auto">
+            @menu
+        </h4>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3 d-flex gap-2 justify-content-end mt-auto">
+
+        @if(botaoAjuda == true)
+        {   
+        <button type="button" class="btn btn-warning btn-sm w-50" data-bs-toggle="modal" data-bs-target="#modalAjuda">
+            <i class="fa-solid fa-question"></i>&nbsp; AJUDA
+        </button>
+        }
+        @if (string.IsNullOrWhiteSpace(rota))
+        {
+            <button onclick="history.back()" class="btn btn-secondary btn-sm w-50 my-0">
+                <i class="fa-solid fa-reply"></i>&nbsp;
+                Voltar
+            </button>
+        }
+        else
+        {
+            <a href="@rota" type="button" class="btn btn-secondary btn-sm w-50 my-0">
+                <i class="fa-solid fa-reply"></i>&nbsp;
+                Voltar
+            </a>
+        }
+    </div>
+</div>

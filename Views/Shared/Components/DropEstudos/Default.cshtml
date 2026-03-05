@@ -1,0 +1,29 @@
+﻿@model List<EstudoModel>
+
+@{
+    int? selecao = ViewBag.selecionado;
+}
+
+@foreach (var tipo in Model.OrderByDescending(x => x.ESTUDOID))
+{
+    if (tipo.ESTUDOID == selecao)
+    {
+        <option value="@tipo.ESTUDOID" selected>
+            @tipo.Descricao
+        </option>
+    }
+    else
+    {
+        <option value="@tipo.ESTUDOID">
+            @tipo.Descricao
+        </option>
+    }
+}
+
+
+
+@*
+
+@await Component.InvokeAsync("DropEstudos", new { selecao = Model.EstudoID })
+
+*@

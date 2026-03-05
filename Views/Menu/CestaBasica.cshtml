@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Cesta Básica";
+}
+
+<div class="container-fluid">
+    <div class="">
+        @await Component.InvokeAsync("TopoMenus", new { menu = "Cesta Básica", rota = @Url.Action("Index", "Menu") })
+    </div>
+
+    <hr class="mb-4" />
+    
+    @if (this.User.GetSenhaTemp())
+    {
+        @await Html.PartialAsync("_alertaTrocarSenha")
+    }
+    <div class="row justify-content-center gap-3">
+
+        <!-- LISTAGEM DE ELEGÍVEIS -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a asp-action="Listagem" asp-controller="CestaBasica">
+                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                    <div class="card-body text-center">
+                        <h1>
+                            <i class="fa-solid fa-box-open"></i>
+                        </h1>
+                        <h6 class="card-title text-uppercase mt-auto text-secondary">ENTREGA</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- CADASTRO DE CESTAS -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a asp-action="Index" asp-controller="CestaBasica">
+                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                    <div class="card-body text-center">
+                        <h1>
+                            <i class="fa-solid fa-warehouse"></i>
+                        </h1>
+                        <h6 class="card-title text-uppercase mt-auto text-secondary">ESTOQUE</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+

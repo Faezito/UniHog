@@ -1,0 +1,14 @@
+﻿@model List<TiposModel>
+
+@foreach (var tipo in Model)
+{
+    <option value="@tipo.ID">@tipo.Descricao</option>
+}
+
+
+
+@*
+
+@await Component.InvokeAsync("DropEnderecosTipos")
+
+*@

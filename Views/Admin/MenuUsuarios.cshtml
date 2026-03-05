@@ -1,0 +1,36 @@
+﻿<div class="container-fluid">
+    <div class="row justify-content-center">
+
+        <!-- GESTÃO DE USUARIOS -->
+        <div class="col-12 col-sm-4">
+            <div class="alert alert-light alert-menu shadow py-3">
+                <h5 class="text-secondary ps-2"><i class="fa-solid fa-user"></i>&nbsp;&nbsp;Usuários</h5>
+                <hr />
+                <ol>
+                    <li><a asp-action="Cadastro" asp-controller="Usuario">Novo Usuário</a></li>
+                    <li><a asp-action="Usuarios" asp-controller="Admin">Listar Usuários</a></li>
+                    <li><a asp-action="Cadastro" asp-controller="Tipo" asp-route-rotaId="1">Adicionar Categoria de Usuário</a></li>
+                    <li><a asp-action="Cadastro" asp-controller="Tipo" asp-route-rotaId="2">Adicionar Tipo de Endereço</a></li>
+                    <li><a asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="1">Listar Categorias de Usuário</a></li>
+                    <li><a asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="2">Listar Tipos de Endereço</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-4">
+            <div class="alert alert-light alert-menu shadow py-3">
+                <h5 class="text-secondary ps-4">Serviços Externos</h5>
+                <hr />
+                <ol>
+                    <li><a asp-action="Cadastro" asp-controller="Usuario">Novo E-mail do Sistema</a></li>
+                    <li><a asp-action="Cadastro" asp-controller="Usuario">Listar E-mails do Sistema</a></li>
+                    @if (this.User.GetUserTipoId() < 0)
+                    {
+                        <li><a asp-action="Cadastro" asp-controller="Usuario">Nova API</a></li>
+                        <li><a asp-action="Cadastro" asp-controller="Usuario">Listar APIs</a></li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,195 @@
+﻿@model InteressadoCadastroModel;
+@{
+    ViewData["Title"] = "Cadastro de Interessado";
+}
+
+<div class="row mb-2">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "Cadastro de Interessado", ajuda = true, rota = @Url.Action("Professor", "Menu") })
+</div>
+
+<hr />
+
+<form method="post" id="form-cadastro" enctype="multipart/form-data">
+    <input type="hidden" asp-for="PessoaID" />
+    <input type="hidden" id="Regiao" name="Regiao" />
+
+    <div class="row justify-content-center">
+        <div class="col-10 col-sm-12">
+
+            <div class="row container-fluid mb-3 gy-3">
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="floatingNome">Nome Completo</label>
+                    <input type="text" class="form-control" id="floatingNome" asp-for="NomeCompleto" required>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Genero">Gênero</label>
+                    <select asp-for="Genero" class="form-select" required>
+                        <option disabled selected>GENERO</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="floatingNascimento">Data de Nascimento</label>
+                    <input type="text" class="form-control date" id="floatingNascimento" asp-for="DataNascimento" required>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="telefone">Telefone</label>
+                    <input type="text" class="form-control tel_com_ddd" id="telefone" asp-for="Telefone">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Projeto">Projeto Origem</label>
+                    <select asp-for="ProjetoIndicacaoID" class="form-select">
+                        <option disabled selected>SELECIONE</option>
+                        @await Component.InvokeAsync("DropProjetos")
+                    </select>
+                </div>
+
+                @if (this.User.GetUserTipoId() <= 3)
+                {
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label asp-for="ProfessorID">Dupla/Professor</label>
+                        <select asp-for="ProfessorID" class="form-select">
+                            <option disabled selected>SELECIONE</option>
+                            @await Component.InvokeAsync("DropProfessores")
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label asp-for="ProfessorID">Dupla/Professor</label>
+                        <input type="hidden" asp-for="ProfessorID" value="@this.User.GetUserId()" />
+                        <input type="text" class="form-control disabled" readonly disabled value="@this.User.GetUserName()" />
+                    </div>
+                }
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Foto" class="form-label">Foto</label>
+                    <input type="file" id="input-foto" class="form-control" asp-for="Foto">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 text-center">
+                    <legend class="fs-6">Interesse em Estudo Bíblico?</legend>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="InteressadoSIM" name="Interessado" value="true">
+                        <label class="form-check-label" name="Interessado">Sim</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="InteressadoNAO" name="Interessado" value="false">
+                        <label class="form-check-label" name="Interessado">Não</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row container-fluid mb-3 mt-4">
+        <h5 class="text-secondary mb-3">Endereço</h5>
+        <hr />
+    </div>
+
+    <div class="row container-fluid justify-content-center mb-3">
+        <div class="col-10 col-sm-12">
+            <div class="row mb-3 gy-3">
+
+                <input type="hidden" name="Regiao" id="Regiao" />
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="cep">CEP</label>
+                    <input type="text" class="form-control" id="cep" name="CEP">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="rua">Rua</label>
+                    <input type="text" class="form-control" id="rua" name="Rua">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Numero">Número</label>
+                    <input type="text" class="form-control" id="Numero" name="Numero">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Bairro">Bairro</label>
+                    <select asp-for="Bairro" class="form-select" required>
+                        <option disabled selected>SELECIONE</option>
+                        @await Component.InvokeAsync("DropBairros2", new { congregacaoId = 1 })
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Cidade">Cidade</label>
+                    <input type="text" class="form-control" id="Cidade" name="Cidade">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado">Estado</label>
+                    <input type="text" class="form-control" id="Estado" name="Estado">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado">UF</label>
+                    <input type="text" class="form-control" id="uf" name="UF">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado">Complemento</label>
+                    <input type="text" class="form-control" id="uf" name="Complemento">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Estado">Referência</label>
+                    <input type="text" class="form-control" id="uf" name="Referencia">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @await Component.InvokeAsync("FormFooter", new { action = "Professor", controller = "Menu" })
+
+</form>
+
+
+<!-- Modal Ajuda -->
+<div class="modal modal-lg fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Ajuda
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section class="border-bottom mb-3">
+                    <h5>
+                        Cadastro
+                    </h5>
+                    <p class="fs-7">
+                        Os campos com <b class="text-warning">BORDAR AMARELA</b> são obrigatórios. Caso a pessoa esteja interessada no estudo, é obrigatório o preenchimento 
+                        do endereço, sendo possível utilizar o CEP para preencher automaticamente, mas não é obrigatório.
+                    </p>
+                </section>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script src="~/js/consulta-cep.js" asp-append-version="true"></script>
+    <script>
+        $(document).on('click', '#btnSalvar',  function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Cadastro", "Interessado")', btnSelector = '#btnSalvar')
+        });
+    </script>
+}

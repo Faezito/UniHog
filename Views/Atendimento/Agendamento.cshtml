@@ -1,0 +1,124 @@
+﻿@model UsuarioRQModel
+
+@{
+    ViewData["Title"] = "Agendar Atendimento";
+    int areaId = ViewBag.area;
+}
+
+<div class="row justify-content-end">
+    <div class="col justify-content-end text-end">
+        <form class="" id="pesquisar">
+            <div class="row justify-content-between">
+                <div class="col-12 col-sm-4">
+                    <h3 class="text-secondary text-sm-start text-center mt-2">AGENDAR ATENDIMENTO</h3>
+                </div>
+                <div class="col-12 col-sm justify-content-end mt-auto">
+                    <div class="row justify-content-end">
+                        <input type="hidden" name="areaId" value="@areaId" />
+                        <div class="col-6 col-md-3 col-lg-4 mt-auto">
+                            <label asp-for="NomeCompleto" class="form-label-sm w-100 text-start">Nome</label>
+                            <input type="text" name="NomeCompleto" id="NomeCompleto" class="form-control form-control-sm w-100" placeholder="Pesquisar" />
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2 mt-auto">
+                            <label asp-for="Bairro" class="form-label-sm w-100 text-start">Bairro</label>
+                            <select asp-for="Bairro" class="form-select form-select-sm w-100">
+                                <option selected value="">BAIRRO</option>
+                                @await Component.InvokeAsync("DropBairros")
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4 mt-3 mt-lg-auto d-flex gap-4">
+                            <button type="submit" class="btn btn-secondary btn-sm w-50 mt-auto">Pesquisar</button>
+                            <a asp-controller="Menu" asp-action="AtendimentosSociais" class="btn btn-secondary btn-sm w-50 mt-auto">
+                                <i class="fa-solid fa-reply"></i>&nbsp;
+                                Voltar
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+<div id="tabela-pessoas" class="col-12 table-responsive table-responsive-sm">
+</div>
+
+<div id="area-modal"></div>
+
+@section Scripts {
+    <script>
+        $('#pesquisar').on('submit', function (e) {
+            e.preventDefault()
+            carregarTabela(1);
+        });
+
+        $(document).ready(function (){
+            carregarTabela(1);
+        })
+
+        $("#NomeCompleto").on('keyup', function () {
+            carregarTabela(1);
+        });
+
+        let timeout = null;
+
+        $("#NomeCompleto").on('keyup', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                carregarTabela(1);
+            }, 300);
+        });
+
+        function carregarTabela(pagina = 1) {
+            const titulo = $('#NomeCompleto').val();
+
+            $.ajax({
+                url: '/Atendimento/Pesquisar?pagina=' + pagina,
+                type: 'POST',
+                dataType: 'html',
+                data: $('#pesquisar').serialize(),
+
+                beforeSend: function () {
+                },
+
+                success: function (resultado) {
+                    $("#tabela-pessoas").html(resultado);
+                },
+
+                complete: function () {
+                },
+
+                error: function () {
+                }
+            });
+        }
+
+        function abrirModal(id) {
+            $.ajax({
+                url: '/Usuario/UsuarioDetalhes?id=' + id,
+                type: 'POST',
+                dataType: 'html',
+                success: function(html)
+                {
+                    $('#area-modal').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('modalUsuario'))
+                    modal.show();
+                },
+                error: function (xhr) {
+                    let mensagem = xhr.responseText || 'Erro ao carregar usuário';
+                    alert(mensagem);
+                    console.error('Erro da controller:', mensagem);
+                }
+            })
+        }
+
+        // FECHAR MODAIS CORRETAMENTE
+        $(document).on('hidden.bs.modal', '.modal', function(){
+            fn_limpaModal();
+        })
+    </script>
+}
+

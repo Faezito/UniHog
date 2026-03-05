@@ -1,0 +1,72 @@
+﻿@model AtendimentoRQModel
+
+@{
+    ViewData["Title"] = "Agenda";
+
+    var prof = this.User.ObterUsuario();
+    List<DiasDaSemana> diasSemana = ViewBag.DiasDaSemana;
+
+    int areaId = ViewBag.rotaId;
+}
+
+<div class="row justify-content-end">
+    <div class="col justify-content-end text-end">
+        <form class="" id="pesquisar">
+            <input type="hidden" asp-for="AreaID" value="@areaId" />
+
+            <div class="row justify-content-between">
+                <div class="col-12 col-md-2">
+                    <h3 class="text-secondary text-sm-start text-center mt-2">Agenda</h3>
+                </div>
+                <div class="col-12 col-sm justify-content-end">
+                    <div class="row justify-content-end">
+                        <div class="col-6 col-md-auto mt-auto">
+                            <label asp-for="DataIni" class="form-label-sm w-100 text-start">Data Inicio</label>
+                            <input asp-for="DataIni" class="form-control form-control-sm w-100" type="date" />
+                        </div>
+
+                        <div class="col-6 col-md-auto mt-auto px-0">
+                            <label asp-for="DataFim" class="form-label-sm w-100 text-start">Data Fim</label>
+                            <input asp-for="DataFim" class="form-control form-control-sm w-100" type="date" />
+                        </div>
+
+                        <div class="col-6 col-md-3 col-lg-3 mt-auto">
+                            <label asp-for="EspecialistaID" class="form-label-sm w-100 text-start">Bairro</label>
+                            <select asp-for="EspecialistaID" class="form-select form-select-sm w-100">
+                                <option selected value="">ESPECIALISTA</option>
+                                @await Component.InvokeAsync("DropEspecialistas", new { areaId = areaId })
+                            </select>
+                        </div>
+                        <div class="col-3 col-md-auto mt-auto px-0">
+                            <button type="submit" class="btn btn-secondary btn-sm w-100 mt-auto">Pesquisar</button>
+                        </div>
+
+                        <div class="col-3 col-md-auto mt-auto">
+                            <a asp-controller="Menu" asp-action="AtendimentosSociais" class="btn btn-secondary btn-sm w-100 mt-auto">
+                                <i class="fa-solid fa-reply"></i>&nbsp;
+                                Voltar
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="tabela"></div>
+
+
+@section Scripts {
+    <script>
+        $(document).on('change', '#EspecialistaID', function(evt){
+            fn_submitPesquisa(evt, '#pesquisar', '@Url.Action("PesquisarAgenda", "Atendimento")', "#tabela")
+        })
+
+        $(document).on('submit', '#pesquisar', function (evt) {
+            fn_submitPesquisa(evt, '#pesquisar', '@Url.Action("PesquisarAgenda", "Atendimento")', "#tabela")
+        });
+    </script>
+}
+

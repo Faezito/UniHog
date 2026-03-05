@@ -1,0 +1,39 @@
+﻿@model List<TiposModel>
+
+@{
+    ViewData["Title"] = "Atendimentos Sociais";
+}
+
+<div class="container-fluid">
+    <div class="">
+        @await Component.InvokeAsync("TopoMenus", new { menu = "Atendimentos Sociais", rota = @Url.Action("Index", "Menu") })
+    </div>
+
+    <hr class="mb-4" />
+
+    @if (this.User.GetSenhaTemp())
+    {
+        @await Html.PartialAsync("_alertaTrocarSenha")
+    }
+    <div class="row justify-content-center gap-3">
+
+        @foreach(var item in Model)
+        { 
+            <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                <a asp-action="Index" asp-controller="Atendimento" asp-route-id="@item.ID">
+                    <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                        <div class="card-body text-center">
+                            <h1>
+                                <i class="@item.Icone"></i>
+                            </h1>
+                            <h6 class="card-title text-uppercase mt-3 text-secondary text-center">@item.Descricao</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+
+    </div>
+
+
+</div>

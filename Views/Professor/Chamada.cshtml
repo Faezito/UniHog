@@ -1,0 +1,97 @@
+﻿@model List<UsuarioModel>
+
+@{
+    var prof = this.User.ObterUsuario();
+    DiasDaSemana dia = ViewBag.dia;
+    List<DateTime> datas = ViewBag.datas;
+    string hoje = datas.OrderBy(x => x.Date).FirstOrDefault().ToString("dd 'de' MMMMMMM 'de' yyyy", new CultureInfo("pt-BR"));
+    int index = 0;
+
+    ViewData["Title"] = $"Chamada - {dia.Dia}, {hoje}";
+}
+
+@await Component.InvokeAsync("TopoMenus", new {
+menu = $"Chamada",
+     rota = @Url.Action("Agenda", "Professor")
+ })
+<h4 class="text-secondary fs-5">@dia.Dia, @hoje</h4>
+<hr />
+<form id="form-cadastro" method="post">
+    <table class="table table-hover">
+        <thead class="">
+            <tr class="align-middle">
+                <td colspan="2">
+                    <label for="EstudoID">Estudo Bíblico</label>
+                    <select name="EstudoID" class="form-select form-select-sm">
+                        <option disabled>SELECIONE</option>
+                        @await Component.InvokeAsync("DropEstudos")
+                    </select>
+                </td>
+                <td colspan="2">
+                    <label for="NumLicao">Número da Lição</label>
+                    <select name="NumLicao" class="form-select form-select-sm" required>
+                        <option disabled>LIÇÃO</option>
+                        @await Html.PartialAsync("_DropLicoes", 31)
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-center fw-bold col-8" colspan="2">Aluno</td>
+                <td class="text-center fw-bold col-2">Presente?</td>
+                <td class="text-center fw-bold col-2">Horário</td>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            @foreach (var aluno in Model)
+            {
+
+                <tr>
+                    <td class="align-middle col-1">
+                        <img src='@(aluno.FotoPerfilURL ?? "/img/users/foto_placeholder.png")' class="rounded-1" alt="Alternate Text" style="max-width: 5rem" />
+                    </td>
+                    <td class="align-middle">
+                        @aluno.NomeCompleto
+                    </td>
+                    @foreach (var d in datas)
+                    {
+                        if (d >= DateTime.Now.AddDays(-3) && d <= DateTime.Now.Date.AddDays(3))
+                        {
+                            <input type="hidden" name="model[@index].PessoaID" value="@aluno.PessoaID" />
+                            <input type="hidden" name="model[@index].Estudo" value="@aluno.EstudoBiblico" />
+                            <input type="hidden" name="model[@index].Aluno" value="@aluno.NomeCompleto" />
+                            <input type="hidden" name="model[@index].ProfessorID" value="@this.User.GetUserId()" />
+                            <input type="hidden" name="model[@index].DataEstudo" value="@d" />
+
+                            <td class="text-center bg-secondary-subtle align-middle">
+                                <select name="model[@index].Presente" value="model[@index].Presente" class="form-select">
+                                    <option value="false">Não</option>
+                                    <option value="true">Sim</option>
+                                </select>
+                            </td>
+
+                            <td class="bg-secondary-subtle align-middle">
+                                <input type="text" class="form-control form-control-sm mx-auto w-75 time" name="model[@index].Horario" />
+                            </td>
+
+                            index++;
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
+
+@await Component.InvokeAsync("FormFooter", new { action = "Agenda", controller = "Professor" })
+
+@section Scripts {
+    <script>
+        $(document).on('change', '#PessoaID', function(evt){
+            fn_submitPesquisa(evt, '#form-pesquisa', '@Url.Action("Pesquisar", "Professor")', "#form-body")
+        })
+
+        $(document).on('click', '#btnSalvar',  function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Chamada", "Professor")', btnSelector = '#btnSalvar')
+        });
+    </script>
+}

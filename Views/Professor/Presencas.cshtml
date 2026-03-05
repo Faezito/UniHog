@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "Listagem de Presenças";
+}
+
+<div class="row justify-content-end">
+    <div class="col justify-content-end text-end">
+        <form class="" id="pesquisar">
+            <div class="row justify-content-end">
+                <div class="col-12">
+                    <h3 class="text-secondary text-md-start text-center mt-2">LISTAGEM DE PRESENÇAS</h3>
+                </div>
+                @if (this.User.GetUserTipoId() < 5)
+                {
+                    <div class="col-6 col-lg-2 col-xl">
+                        <label for="ProfessorID" class="form-label-sm w-100 text-start">Professor</label>
+                        <select name="ProfessorID" id="ProfessorID" class="form-select form-select-sm w-100">
+                            <option selected value="">TODOS</option>
+                            @await Component.InvokeAsync("DropProfessores")
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <input type="hidden" name="ProfessorID" value="@this.User.GetUserId()" />
+                }
+
+                <div class="col-6 col-lg-2 col-xl">
+                    <label for="Aluno" class="form-label-sm w-100 text-start">Aluno</label>
+                    <input name="Aluno" id="Aluno" class="form-control form-control-sm" />
+                </div>
+
+                <div class="col-6 col-lg-2 col-xl mt-2 mt-sm-0">
+                    <label for="Mes" class="form-label-sm w-100 text-start">Mês</label>
+                    <select name="Mes" class="form-select form-select-sm w-100">
+                        <option value="">TODOS</option>
+                        @await Component.InvokeAsync("DropMeses", new { mes = DateTime.Now.Month.ToString() })
+                    </select>
+                </div>
+
+                <div class="col-6 col-lg-2 col-xl mt-2 mt-sm-0">
+                    <label for="Ano" class="form-label-sm w-100 text-start">Ano</label>
+                    <select name="Ano" class="form-select form-select-sm w-100">
+                        @await Component.InvokeAsync("DropAnos", new { anoInicio = 2025 })
+                    </select>
+                </div>
+
+                <div class="col-12 col-lg-4 col-xl-3 d-flex justify-content-between gap-4 mt-3">
+                    <button type="submit" class="btn btn-primary btn-sm w-50 mt-auto">
+                        <i class="fa-solid fa-magnifying-glass"></i>&nbsp;
+                        Pesquisar
+                    </button>
+
+                    <a asp-action="Professor" asp-controller="Menu" class="btn btn-secondary btn-sm w-50 mt-auto">
+                        <i class="fa-solid fa-reply"></i>
+                        &nbsp;Voltar
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+<div id="tabela-presencas">
+</div>
+
+<div id="area-modal"></div>
+
+@section Scripts {
+    <script>
+        $('#pesquisar').on('submit', function (e) {
+            e.preventDefault()
+            carregarTabela();
+        });
+
+        $(document).ready(function (){
+            carregarTabela();
+        })
+
+        $("#Aluno").on('keyup', function () {
+            carregarTabela();
+        });
+
+        let timeout = null;
+
+        $("#Aluno").on('keyup', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                carregarTabela();
+            }, 300);
+        });
+
+        function carregarTabela() {
+            $.ajax({
+                url: '/Professor/ListarPresencas',
+                type: 'POST',
+                dataType: 'html',
+                data: $('#pesquisar').serialize(),
+
+                beforeSend: function () {
+                },
+
+                success: function (resultado) {
+                    $("#tabela-presencas").html(resultado);
+                    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+                    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                },
+
+                complete: function () {
+                },
+
+                error: function () {
+                }
+            });
+        }
+
+    </script>
+}
+

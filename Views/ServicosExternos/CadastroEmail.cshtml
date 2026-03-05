@@ -1,0 +1,115 @@
+﻿@model EmailConfig;
+
+@{
+    ViewData["Title"] = "E-mails do Sistema";
+}
+
+<div class="row mb-2">
+    <h2 class="text-uppercase">
+        Cadastro de E-mail
+    </h2>
+</div>
+
+<hr />
+
+<form method="post" id="form-cadastro">
+    <div class="row mb-3 gy-3">
+        @*         
+        <div class="col-12 col-sm-2 col-md-4">
+            <label asp-for="ID" class="form-label">ID</label>
+        </div> 
+        *@
+
+        <input type="hidden" class="form-control" asp-for="ID" readonly>
+
+        <div class="col-12 col-sm-4 col-md-4">
+            <label asp-for="Descricao" class="form-label">Descrição</label>
+            <input type="text" class="form-control" asp-for="Descricao" placeholder="Descrição" required>
+        </div>
+        <div class="col-12 col-sm-4 col-md-3">
+            <label asp-for="Email" class="form-label">E-mail</label>
+            <input type="text" class="form-control" asp-for="Email" placeholder="E-mail" required>
+        </div>
+        <div class="col-12 col-sm-4 col-md-3">
+            <label asp-for="Server" class="form-label">Server</label>
+            <input type="text" class="form-control" asp-for="Server" placeholder="Server">
+        </div>
+        <div class="col-12 col-sm-4 col-md-2">
+            <label asp-for="Port" class="form-label">Port</label>
+            <input type="text" class="form-control" asp-for="Port" placeholder="Port">
+        </div>
+        <div class="col-12 col-sm-4 col-md-3">
+            <label asp-for="FromName" class="form-label" data-bs-toggle="tooltip" data-bs-title="Nome que aparecerá no e-mail enviado">FromName</label>
+            <input type="text" class="form-control" asp-for="FromName" placeholder="FromName" required>
+        </div>
+        <div class="col-12 col-sm-4 col-md-3">
+            <label asp-for="Remetente" class="form-label">Remetente</label>
+            <input type="text" class="form-control" asp-for="Remetente" placeholder="Remetente" required>
+        </div>
+
+        <div class="col-12 col-sm-4 d-flex justify-content-between gap-3 mt-3">
+            <div class="col-12 col-sm-4 text-center col-md-2 mt-auto">
+                <label asp-for="UseSSL" class="form-check-label w-100 mb-3">SSL?</label>
+                <input type="checkbox" class="form-check-input" asp-for="UseSSL" placeholder="UseSSL?">
+            </div>
+            <div class="col-12 col-sm-4 text-center col-md-2 mt-auto">
+                <label asp-for="UseStartTls" class="form-check-label w-100 mb-3">StartTls?</label>
+                <input type="checkbox" class="form-check-input" asp-for="UseStartTls" placeholder="UseStartTls?">
+            </div>
+        </div>
+        <div class="col-12 col-sm-4 col-md-3">
+            <label asp-for="Username" class="form-label">Usuário</label>
+            <input type="text" class="form-control" asp-for="Username" placeholder="Usuário">
+        </div>
+        <div class="col-12 col-sm-4 col-md-3">
+            <label asp-for="Password" class="form-label">Senha</label>
+            <input type="text" class="form-control" asp-for="Password" placeholder="Senha">
+        </div>
+    </div>
+</form>
+
+
+<div class="row justify-content-center mt-3">
+    <hr class="my-4" />
+
+    <div class="col-12 col-md-6 my-auto">
+        <form method="post" id="form-teste">
+            <div class="input-group mb-3 w-auto">
+                <input type="text" class="form-control w-auto" name="destinatarioTeste" placeholder="E-mail de teste" aria-label="E-mail de teste">
+                <button class="btn btn-outline-primary w-auto" type="button" id="btnTeste">Testar SMTP</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="row my-1 align-self-end justify-content-end mb-3">
+            <div class="col-md-auto col-6">
+                <button type="submit" id="btnSalvar" class="btn btn-success w-100 my-0">
+                    <span id="texto-salvar">
+                        <i class="fa-solid fa-floppy-disk"></i>&nbsp;
+                        Salvar
+                    </span>
+                    <span id="loading" style="display:none; text-align:center;" class="spinner-border spinner-border-sm" role="status"></span>
+                </button>
+            </div>
+
+            <div class="col-md-auto col-6">
+                <button onclick="history.back()" class="btn btn-secondary w-100 my-0">
+                    <i class="fa-solid fa-reply"></i>&nbsp;
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+         $(document).on('click', '#btnSalvar', function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("CadastroEmail", "ServicosExternos")', btnSelector = '#btnSalvar')
+        });
+
+         $(document).on('click', '#btnTeste', function (evt) {
+            fn_submit4(evt, 'form-teste', '@Url.Action("TestarSMTP", "ServicosExternos")', btnSelector = '#btnSalvar')
+        });
+    </script>
+}

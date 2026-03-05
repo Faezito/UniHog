@@ -1,0 +1,107 @@
+﻿@model PaginacaoModel<UsuarioModel>
+
+@{
+    int areaId = ViewBag.area;
+    int janela = 2;
+    int inicio = Math.Max(1, Model.PaginaAtual - janela);
+    int fim = Math.Min(Model.TotalPaginas, Model.PaginaAtual + janela);
+}
+
+
+@if (Model.Dados.Count() <= 0)
+{
+    @await Component.InvokeAsync("TabelaSemRegistros")
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td class="text-center">Nome Completo</td>
+                <td class="text-center">Telefone</td>
+                <td class="text-center">E-mail</td>
+                <td class="text-center">Idade</td>
+                <td class="text-center">Bairro</td>
+                <td class="text-center">Agendar</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var pessoa in Model.Dados)
+            {
+                <tr class="lista-hover">
+                    <td onclick="abrirModal(@pessoa.PessoaID)">@pessoa.NomeCompleto</td>
+                    <td onclick="abrirModal(@pessoa.PessoaID)">@pessoa.Telefone?.FormatarTelefone()</td>
+                    <td onclick="abrirModal(@pessoa.PessoaID)">@pessoa.Email</td>
+                    <td onclick="abrirModal(@pessoa.PessoaID)">@pessoa.DataNascimento.CalcularIdadeString()</td>
+                    <td onclick="abrirModal(@pessoa.PessoaID)">@pessoa.Enderecos.FirstOrDefault()?.Bairro</td>
+                    <td class="p-1 m-0 align-middle text-center">
+                        <a asp-controller="Atendimento" asp-action="NovoAgendamento" asp-route-pessoaId="@pessoa.PessoaID" asp-route-areaId="@areaId" class="btn btn-secondary btn-sm">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<nav aria-label="Paginação" class="border-top">
+    <ul class="pagination justify-content-end">
+
+        <li class="page-item @(Model.PaginaAtual == 1 ? "disabled" : "")">
+            <a class="page-link" href="#"
+               onclick="carregarTabela(@(Model.PaginaAtual - 1))">
+                Anterior
+            </a>
+        </li>
+
+        @if (inicio > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="carregarTabela(1)">1</a>
+            </li>
+
+            @if (inicio > 2)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            }
+        }
+
+        @for (int i = inicio; i <= fim; i++)
+        {
+            <li class="page-item @(i == Model.PaginaAtual ? "active" : "")">
+                <a class="page-link" href="#" onclick="carregarTabela(@i)">
+                    @i
+                </a>
+            </li>
+        }
+
+        @if (fim < Model.TotalPaginas)
+        {
+            @if (fim < Model.TotalPaginas - 1)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            }
+
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="carregarTabela(@Model.TotalPaginas)">
+                    @Model.TotalPaginas
+                </a>
+            </li>
+        }
+
+        <li class="page-item @(Model.PaginaAtual == Model.TotalPaginas ? "disabled" : "")">
+            <a class="page-link" href="#"
+               onclick="carregarTabela(@(Model.PaginaAtual + 1))">
+                Próxima
+            </a>
+        </li>
+
+    </ul>
+</nav>

@@ -1,0 +1,158 @@
+﻿@model List<EspecialidadeModel>
+@{
+        ViewData["Title"] = "Especialidades";
+}
+
+
+<div class="row justify-content-end">
+    <div class="col text-start">
+        <h5 class="text-uppercase">ESPECIALIDADES</h5>
+    </div>
+    <div class="col-auto text-end">
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalNovaEspecialidade">
+            <i class="fa-solid fa-key"></i>&nbsp; ADICIONAR
+        </button>
+        <a asp-controller="Menu" asp-action="Cadastros" class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-reply"></i>&nbsp;
+            Voltar
+        </a>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+
+<div class="col col-md-6 mx-auto">
+    <table class="table table-striped table-bordered border-light-subtle mb-0">
+        <thead>
+            <tr>
+                <td class="text-center">ID</td>
+                <td class="text-center">Área</td>
+                <td class="text-center">Especialização</td>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-start align-middle">@item.ID</td>
+                <td class="text-start align-middle">
+                    @item.Area
+                </td>
+                <td class="text-start align-middle">
+                    @item.Descricao
+                </td>
+                <td class="text-center">
+                    <button type="button" data-id="@item.ID" class="btn btn-secondary btn-sm w-auto btn-editar">
+                        <i class="fa-solid fa-pencil"></i>
+                    </button>
+                    <form id="form-deletar-@item.ID " asp-action="Deletar" asp-controller="Especialidade" class="d-inline">
+                        <input type="hidden" name="ID" value="@item.ID" />
+
+                        <button type="submit" class="btn btn-danger btn-sm btn-deletar w-auto">
+                            <i class="fas fa-trash-can"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+<!-- Modal Add -->
+<div class="modal fade" id="modalNovaEspecialidade" tabindex="-1" aria-labelledby="modalEspecialidadeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Cadastro
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="form-cadastro">
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="Descricao">Especialidade</label>
+                            <input type="text" class="form-control" id="Tipo" name="Descricao" placeholder=" " required>
+                        </div>
+
+                        <div class="col">
+                            <label for="AreaID">Área</label>
+                            <select class="form-select form-select" name="AreaID">
+                                @await Component.InvokeAsync("DropAreasEspecializacao")
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <button type="button" id="btnCadastrar" class="btn btn-success btn-sm">
+                                <span id="texto-salvar">
+                                    <i class="fa-solid fa-floppy-disk"></i>&nbsp;
+                                    Salvar
+                                </span>
+                                <span id="loading" style="display:none; text-align:center;" class="spinner-border spinner-border-sm" role="status"></span>
+                            </button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fa-solid fa-reply"></i>&nbsp;
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="area-modal"></div>
+
+@section Scripts {
+    <script>
+        $(document).on('click', '.btn-deletar', function (e) {
+            fn_deletar(e, '@Url.Action("Deletar", "Especialidade")')
+        });
+
+        // MODAL EDIÇÃO
+        // TODO: TROCAR POR WRAPPER
+        $(document).on('click', '.btn-editar', function(e){
+            const id = $(this).data('id');
+            modalEdicao(id);
+        })
+
+
+        // TRANSFORMAR EM WRAPPER
+        function modalEdicao(id) {
+            $.ajax({
+                url: '/Especialidade/Editar?id=' + id,
+                type: 'POST',
+                dataType: 'html',
+                success: function(html)
+                {
+                    $('#area-modal').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('modalEspecialidade'))
+                    modal.show();
+                },
+                error: function (xhr) {
+                    let mensagem = xhr.responseText || 'Erro ao carregar';
+                    alert(mensagem);
+                    console.error('Erro da controller:', mensagem);
+                }
+            })
+        }
+
+        $(document).on('click', '#btnSalvar',  function (evt) {
+            fn_submit4(evt, 'form-edicao', '@Url.Action("Cadastro", "Especialidade")', btnSelector = '#btnSalvar')
+        });
+
+        $(document).on('click', '#btnCadastrar',  function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Cadastro", "Especialidade")', btnSelector = '#btnCadastrar')
+        });
+
+    </script>
+}

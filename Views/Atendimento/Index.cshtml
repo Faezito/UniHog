@@ -1,0 +1,63 @@
+﻿@model TiposModel
+
+@{
+    string titulo = $"Atendimento {Model.Descricao}";
+    ViewData["Title"] = titulo;
+}
+
+<div class="container-fluid">
+    <div class="d-none d-sm-inline">
+        @await Component.InvokeAsync("TopoMenus", new { menu = titulo, rota = @Url.Action("AtendimentosSociais", "Menu") })
+    </div>
+
+    <hr class="mb-4" />
+
+    <div class="row justify-content-center gap-3">
+
+        <!-- AGENDAMENTO -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a asp-action="Agendamento" asp-controller="Atendimento" asp-route-id="@Model.ID">
+                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                    <div class="card-body text-center">
+                        <h1>
+                            <i class="fa-solid fa-file-pen"></i>
+                        </h1>
+                        <h6 class="card-title text-uppercase mt-3 text-secondary text-center">NOVO AGENDAMENTO</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- AGENDA -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a asp-action="Agenda" asp-controller="Atendimento" asp-route-id="@Model.ID">
+                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                    <div class="card-body text-center">
+                        <h1><i class="fa-solid fa-chart-pie"></i></h1>
+                        <h6 class="card-title text-uppercase mt-3 text-secondary">AGENDA</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- RELATÓRIOS -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a asp-action="" asp-controller="" asp-route-id="@Model.ID">
+                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                    <div class="card-body text-center">
+                        <h1><i class="fa-solid fa-chart-pie"></i></h1>
+                        <h6 class="card-title text-uppercase mt-3 text-secondary">RELATÓRIOS</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="d-block d-sm-none pt-4">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "", rota = @Url.Action("Index", "Menu") })
+</div>
+
+@section Scripts {
+}
+

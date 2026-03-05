@@ -1,0 +1,27 @@
+﻿@model List<ProjetoModel>;
+@{
+    int? selecao = ViewBag.selecionado;
+}
+
+@foreach (var tipo in Model)
+{
+    if (tipo.PROJETOID == selecao)
+    {
+        <option value="@tipo.PROJETOID" selected>
+            @tipo.Descricao
+        </option>
+    }
+    else
+    {
+        <option value="@tipo.PROJETOID">
+            @tipo.Descricao
+        </option>
+    }
+}
+
+
+@*
+
+@await Component.InvokeAsync("DropProjetos")
+
+*@

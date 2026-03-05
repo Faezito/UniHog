@@ -1,0 +1,65 @@
+﻿@model List<ChamadaModel>
+
+@{
+    List<DateTime?> dias = ViewBag.Dias;
+    List<AlunoModel> alunos = ViewBag.Alunos;
+}
+
+@if (Model.Count() <= 0)
+{
+    @await Component.InvokeAsync("TabelaSemRegistros")
+}
+else
+{
+    <table class="table table-hover">
+        <tr>
+            <td class="text-center" colspan="2">Aluno</td>
+            <td class="text-center" style="width: 8%; white-space: nowrap;">Faltas</td>
+            @foreach (var d in dias)
+            {
+                <td class="text-center" style="width: 5%; white-space: nowrap;">@d?.ToString("dd/MMM")</td>
+            }
+        </tr>
+        <tbody class="table-group-divider">
+            @foreach (var aluno in alunos)
+            {
+                int faltas = Model.Where(x => x.PessoaID == aluno.PessoaID && x.Presente == false).Count();
+
+                <tr>
+                    <td class="align-middle col-1">
+                        <img src='@(aluno.FotoPerfilURL ?? "/img/users/foto_placeholder.png")' class="rounded-1" alt="Alternate Text" style="max-width: 5rem; max-height: 5rem;" />
+                    </td>
+                    <td class="align-middle">@aluno.NomeCompleto</td>
+                    <td class="align-middle text-center">@faltas</td>
+
+                    @foreach (var d in dias)
+                    {
+                        var chamada = Model.Where(x => x.PessoaID == aluno.PessoaID && x.DataEstudo?.Date == d);
+                        string? tooltip = Model.Where(x => x.PessoaID == aluno.PessoaID && x.DataEstudo?.Date == d).Select(x=>x.Tooltip).FirstOrDefault();
+
+                        <td class="fs-1 border-secondary-subtle border-start text-center align-middle text-secondary @chamada.Select(x => x.PresenteCor).FirstOrDefault()"
+                            data-bs-toggle="@(string.IsNullOrWhiteSpace(tooltip) ? " " : "tooltip")" 
+                            data-bs-placement="left"
+                            data-bs-title="@tooltip">
+
+                            @if (chamada.Select(x => x.Presente).FirstOrDefault() == true)
+                            {
+                                <i class="fa-solid fa-calendar-check"></i>
+                            }
+                            else if (chamada.Select(x => x.Presente).FirstOrDefault() == false)
+                            {
+                                <i class="fa-solid fa-calendar-xmark"></i>
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-calendar"></i>
+                            }
+                        </td>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

@@ -1,0 +1,18 @@
+﻿@model List<EspecialidadeModel>
+@{
+    var areas = ViewBag.Areas;
+}
+
+@foreach(var x in Model.Select(x => new { x.Area, x.AreaID }).Distinct())
+{
+    <optgroup label="@x.Area" data-id="@x.AreaID">   
+        @foreach (var item in Model.Where(m=>m.AreaID == x.AreaID))
+        {
+            <option value="@item.ID">@item.Descricao</option>
+        }
+    </optgroup>   
+}
+
+@*
+    @await Component.InvokeAsync("DropEspecializacoes", new { areaId })
+*@

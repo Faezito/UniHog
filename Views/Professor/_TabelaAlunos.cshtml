@@ -1,0 +1,77 @@
+﻿@using Z4.Bibliotecas
+@model List<UsuarioModel>
+
+@{
+}
+
+@if (Model.Count() <= 0)
+{
+    @await Component.InvokeAsync("TabelaSemRegistros")
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td class="text-center" colspan="2">Aluno</td>
+                <td class="text-center">Contato</td>
+                <td class="text-center" colspan="2">Endereço</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var pessoa in Model)
+            {
+                var url = string.Empty;
+                if (pessoa.Enderecos.Count() > 0)
+                {
+                    var enderecoCompleto = $"{pessoa.Enderecos.First().Rua}, {pessoa.Enderecos.First().Numero}, {pessoa.Enderecos.First().Bairro}, {pessoa.Enderecos.First().Cidade} - {pessoa.Enderecos.First().Estado}, {pessoa.Enderecos.First().CEP}";
+                    var enderecoEncoded = Uri.EscapeDataString(enderecoCompleto);
+                    url = $"https://www.google.com/maps/search/?api=1&query={enderecoEncoded}";
+                }
+
+                <tr class="lista-hover">
+                    <td class="align-middle col-1">
+                        <img src='@(pessoa.FotoPerfilURL ?? "/img/users/foto_placeholder.png")' class="rounded-1" alt="Alternate Text" style="max-width: 5rem; max-height: 5rem;" />
+                    </td>
+                    <td onclick="formulario(@pessoa.PessoaID)" class="align-middle">
+                        <ul class="list-unstyled">
+                            <li> @pessoa.NomeCompleto </li>
+                            <li> @pessoa.DataNascimento.CalcularIdadeString() </li>
+                            <li class="@pessoa.SituacaoCor"> @pessoa.Situacao </li>
+                        </ul>
+                    </td>
+                    <td onclick="formulario(@pessoa.PessoaID)" class="align-middle">
+                        <ul class="list-unstyled">
+                            <li> @pessoa.Telefone.FormatarTelefone() </li>
+                            <li> @pessoa.Email </li>
+                        </ul>
+                    </td>
+                    @if (pessoa.Enderecos.Count() > 0)
+                    {
+                        <td onclick="formulario(@pessoa.PessoaID)" class="align-middle">
+                            <ul class="list-unstyled">
+                                <li> @pessoa.Enderecos.FirstOrDefault(x => x.TipoID == 1)?.EnderecoReduzido </li>
+                                <li> @pessoa.Enderecos.FirstOrDefault()?.Bairro </li>
+                            </ul>
+                        </td>
+                        <td class="p-1 m-0 align-middle text-center">
+                            <a href="@url" target="_blank" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Visualizar no Google Maps">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                            </a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td colspan="2" class="fw-bold align-middle">
+                            Nenhum endereço encontrado.
+                        </td>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+

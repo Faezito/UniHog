@@ -1,0 +1,10 @@
+﻿@model List<SelectListItem>
+
+@foreach (var item in Model)
+{
+    <option value="@int.Parse(item.Value)">@item.Text</option>
+}
+
+@*
+    @await Component.InvokeAsync("DropAreasEspecializacao")
+*@

@@ -1,0 +1,121 @@
+﻿@model UsuarioModel;
+
+@{
+    ViewData["Title"] = "Novo Atendimento";
+
+    int areaID = ViewBag.areaID;
+}
+
+<div class="d-none d-sm-inline">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "Agendar atendimento", rota = @Url.Action("Agendamento", "Atendimento") })
+</div>
+
+<hr class="mb-4" />
+<div class="row justify-content-center">
+    <div class="col-10">
+        <!--  Dados pessoa  -->
+        <div class="row mb-3 gy-3">
+            <div class="col-12 col-sm-6 col-md-4">
+                <label>Nome Completo</label>
+                <input type="text" class="form-control" name="Paciente" value="@Model.NomeCompleto" disabled readonly>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4">
+                <label>Email</label>
+                <input type="email" class="form-control" value="@Model.Email" disabled readonly>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4">
+                <label>Data de Nascimento </label>
+                <input type="text" class="form-control date" value="@Model.DataNascimento" disabled readonly>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4">
+                <label>Telefone</label>
+                <input type="text" class="form-control tel_com_ddd" value="@Model.Telefone" disabled readonly>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4">
+                <label>Gênero</label>
+                <input type="text" class="form-control" value="@Model.GeneroTxt" disabled readonly>
+            </div>
+
+
+            <!--  Agendamento  -->
+            <form method="post" id="form-cadastro" class="row mt-3" enctype="multipart/form-data">
+                <input type="hidden" name="PacienteID" value="@Model.PessoaID" />
+                <input type="hidden" name="Paciente" value="@Model.NomeCompleto" />
+                <input type="hidden" name="AreaID" value="@areaID" />
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="EspecialistaID">Especialista</label>
+                    <select name="EspecialistaID" id="EspecialistaID" class="form-select">
+                        <option value="" selected disabled>SELECIONE</option>
+                        @await Component.InvokeAsync("DropEspecialistas", new { areaId = areaID })
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Custo">Custo</label>
+                    <input type="text" class="form-control money" id="Custo" name="Custo">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Data">Data de Consulta</label>
+                    <input type="text" class="form-control date" id="Data" name="Data" required>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Hora">Horário</label>
+                    <input type="text" class="form-control time" id="Hora" name="Hora" required>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Observacao">Observação</label>
+                    <input type="text" class="form-control" id="Observacao" name="Observacao">
+                </div>
+            </form>
+
+
+            <div id="tbl-funcionamento"></div>
+        </div>
+    </div>
+</div>
+
+<div id="area-modal"></div>
+
+
+@await Component.InvokeAsync("FormFooter", new { action = "Agendamento", controller = "Atendimento" })
+
+
+@section Scripts {
+    <script>
+        $(document).on('click','#btnSalvar', function (evt) {
+            console.log("Cadastrando")
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Agendar", "Atendimento")', btnSelector = '#btnSalvar')
+        });
+
+        $(document).on('change', '#EspecialistaID', function(e){
+            let id = $(this).val()
+            abrirModal(id);
+        });
+
+        function abrirModal(id) {
+            $.ajax({
+                url: '/PessoaJuridica/Detalhes?id=' + id,
+                type: 'POST',
+                dataType: 'html',
+                success: function(html)
+                {
+                    $('#area-modal').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('modalEmpresa'))
+                    modal.show();
+                },
+                error: function (xhr) {
+                    let mensagem = xhr.responseText || 'Erro ao carregar usuário';
+                    alert(mensagem);
+                    console.error('Erro da controller:', mensagem);
+                }
+            })
+        }
+    </script>
+}

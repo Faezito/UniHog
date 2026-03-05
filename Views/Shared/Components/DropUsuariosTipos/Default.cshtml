@@ -1,0 +1,29 @@
+﻿@model List<TiposModel>
+
+@{
+    int? selecao = ViewBag.selecionado;
+}
+
+@foreach (var tipo in Model.OrderByDescending(x => x.ID))
+{
+    if (tipo.ID == selecao)
+    {
+        <option value="@tipo.ID" class="@tipo.Cor" selected>
+            @tipo.Descricao
+        </option>
+    }
+    else
+    {
+        <option value="@tipo.ID" class="@tipo.Cor">
+            @tipo.Descricao
+        </option>
+    }
+}
+
+
+
+@*
+
+@await Component.InvokeAsync("DropUsuariosTipos", new { usuarioId = PessoaID })
+
+*@

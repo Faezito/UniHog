@@ -1,0 +1,33 @@
+﻿@model UsuarioModel
+
+@{
+    var diasSelecionados = Model?.DiasEstudoIDs ?? Array.Empty<int>();
+
+    var dias = new Dictionary<int, string>
+    {
+        {1, "Domingo"},
+        {2, "Segunda-feira"},
+        {3, "Terça-feira"},
+        {4, "Quarta-feira"},
+        {5, "Quinta-feira"},
+        {6, "Sexta-feira"},
+        {7, "Sábado"}
+    };
+}
+
+<div class="row justify-content-between d-flex mb-5 px-5">
+    @foreach (var dia in dias)
+    {
+        <div class="form-check form-check-inline w-auto">
+            <input class="form-check-input"
+                   type="checkbox"
+                   name="DiasEstudoIDs"
+                   value="@dia.Key"
+                   id="dia-@dia.Key"
+                   @(diasSelecionados.Contains(dia.Key) ? "checked" : "") />
+
+            <label class="form-check-label" for="dia-@dia.Key">@dia.Value</label>
+        </div>
+    }
+</div>
+

@@ -1,0 +1,62 @@
+﻿@model List<InteressadoModel>
+
+@if (Model.Count() <= 0)
+{
+    @await Component.InvokeAsync("TabelaSemRegistros")
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td class="text-center col-2">Nome Completo</td>
+                <td class="text-center col-2">Telefone</td>
+                <td class="text-center col-1">Idade</td>
+                <td class="text-center col-1">Situação</td>
+                <td class="text-center col-2">Endereço</td>
+                <td class="text-center col-1">Bairro</td>
+                <td class="text-center col-1"></td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var pessoa in Model)
+            {
+                var enderecoCompleto = $"{pessoa.Enderecos.First().Rua}, {pessoa.Enderecos.First().Numero}, {pessoa.Enderecos.First().Bairro}, {pessoa.Enderecos.First().Cidade} - {pessoa.Enderecos.First().Estado}, {pessoa.Enderecos.First().CEP}";
+                var enderecoEncoded = Uri.EscapeDataString(enderecoCompleto);
+                var url = $"https://www.google.com/maps/search/?api=1&query={enderecoEncoded}";
+
+                <tr class="lista-hover">
+                    <td class="" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.NomeCompleto</td>
+                    <td class="text-center" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.Telefone.FormatarTelefone()</td>
+                    <td class="text-center" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.DataNascimento.CalcularIdadeString()</td>
+                    <td class="text-center fw-bold @(pessoa.Interessado == true ? "text-success" : "text-danger")" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.InteressadoTxt</td>
+                    <td class="" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.Enderecos.FirstOrDefault()?.EnderecoReduzido</td>
+                    <td class="" onclick="abrirModal(@pessoa.PessoaID)">@pessoa.Enderecos.FirstOrDefault()?.Bairro</td>
+                    <td class="px-3 m-0 text-end align-middle">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <a asp-action="Integrar" asp-controller="Interessado" asp-route-id="@pessoa.PessoaID" class="btn btn-success btn-sm"
+                               data-bs-toggle="tooltip" data-bs-title="Integrar ao sistema">
+                                <i class="fa-solid fa-upload"></i>
+                            </a>
+                            <a href="@url" target="_blank" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Visualizar no Google Maps">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                            </a>
+                            @if (this.User.GetUserTipoId() < 3)
+                            {
+                                <form id="form-deletar" class="col-1">
+                                    <input type="hidden" name="interessadoId" value="@pessoa.PessoaID" />
+
+                                    <button type="submit" class="btn btn-danger btn-sm btn-deletar">
+                                        <i class="fas fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

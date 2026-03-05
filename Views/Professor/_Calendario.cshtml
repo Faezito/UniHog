@@ -1,0 +1,37 @@
+﻿@model List<UsuarioModel>
+
+@{
+    var prof = this.User.ObterUsuario();
+    List<DiasDaSemana> diasSemana = ViewBag.diasSemana;
+}
+
+<div class="row gap-5 justify-content-center p-4">
+    @foreach (var dia in diasSemana)
+    {
+        int quantidade = Model.Where(x => x.DiasEstudoIDs?.Contains(dia.DiaID) == true).OrderBy(x => x.NomeCompleto).Count();
+        <div class="col-12 col-sm-5 col-md-3 border shadow-sm rounded card-menu p-3" onclick="location.href='@Url.Action("Chamada", "Professor", new { diaId = dia.DiaID })'">
+            <div id="alert alert-light">
+                <h4 class="fs-5 text-secondary ps-3 pb-3 border-bottom justify-content-between d-flex">
+                    @dia.Dia  <span class="badge @(quantidade > 0 ? "text-bg-success" : "text-bg-secondary")">@quantidade</span>
+                </h4>
+                @if (!Model.Any(x => x.DiasEstudoIDs?.Contains(dia.DiaID) == true))
+                {
+                    <h6 class="text-center mt-4">SEM AULAS</h6>
+                }
+                <table class="table table-borderless">
+                    @foreach (var aluno in Model.Where(x => x.DiasEstudoIDs?.Contains(dia.DiaID) == true).OrderBy(x => x.NomeCompleto).Take(5).ToList())
+                    {
+                        <tr>
+                            <td class="text-start">
+                                @aluno.NomeCompleto
+                            </td>
+                            <td class="text-end">
+                                @aluno.LocalEstudo
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
+</div>

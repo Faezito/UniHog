@@ -1,0 +1,388 @@
+﻿@model UsuarioModel;
+@{
+    ViewData["Title"] = "Editar usuário";
+}
+
+<div class="d-none d-sm-inline">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "Cadastro de Usuário", rota = @Url.Action("Index", "Menu") })
+</div>
+
+<hr class="mb-4" />
+
+<form method="post" id="form-cadastro" enctype="multipart/form-data">
+    <input type="hidden" asp-for="PessoaID" />
+    <input type="hidden" asp-for="interessadoId" />
+    <input type="hidden" asp-for="Usuario" />
+
+    <div class="row justify-content-center">
+        <div class="col-10 col-sm">
+            <!--  Nome, Email e CPF  -->
+            <div class="row mb-3 gy-3">
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label class="form-label">Nome Completo</label>
+                    <input type="text" class="form-control" asp-for="NomeCompleto" required>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" asp-for="Email" required>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="cpf" class="form-label">CPF</label>
+                    <input type="text" class="form-control cpf" id="cpf" asp-for="CPF" required>
+                </div>
+
+
+                <!--  Nascimento, Tel e Genero  -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label class="form-label">Data de Nascimento</label>
+                    <input type="text" class="form-control date" asp-for="DataNascimento" required>
+                    @* 
+                        Usar o abaixo caso continue vindo data errada
+                    <input type="text" class="form-control date" asp-for="DataNascimento" value="@Model.DataNascimento.ToString("dd/MM/yyyy")" required> *@
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="telefone" class="form-label">Telefone</label>
+                    <input type="text" class="form-control tel_com_ddd" id="telefone" asp-for="Telefone" required>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Genero" class="form-label">Gênero</label>
+                    <select asp-for="Genero" class="form-select">
+                        <option value="" disabled>GENERO</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+
+                <!--  Tipo, Estudo e Projeto  -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="TipoID" class="form-label">Cargo</label>
+                    <select asp-for="TipoID" class="form-select">
+                        @await Component.InvokeAsync("DropUsuariosTipos", new { usuarioId = this.User.GetUserId(), selecionado = Model.TipoID })
+                    </select>
+                </div>
+
+
+                @if (Model.TipoID > 15)
+                {
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label asp-for="EstudoBiblico" class="form-label">Estudo Biblico</label>
+                        <select asp-for="EstudoID" class="form-select">
+                            <option disabled value="">SELECIONE</option>
+                            @await Component.InvokeAsync("DropEstudos", new { selecionado = Model.EstudoID })
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label asp-for="SituacaoID" class="form-label">Situação</label>
+                        <select asp-for="SituacaoID" class="form-select">
+                            <option value="">SELECIONE</option>
+                            @await Component.InvokeAsync("DropPessoasSituacoes", new { selecionado = Model.SituacaoID })
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label asp-for="ProfessorID" class="form-label">Professor</label>
+                        <select asp-for="ProfessorID" class="form-select">
+                            <option value="">SELECIONE</option>
+                            @await Component.InvokeAsync("DropProfessores", new { selecionado = Model.ProfessorID })
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label asp-for="EstudaEmCasa" class="form-label">Estuda em Casa?</label>
+                        <select asp-for="EstudaEmCasa" class="form-select">
+                            <option value="">SELECIONE</option>
+                            <option value="true">SIM</option>
+                            <option value="false">NÃO</option>
+                        </select>
+                    </div>
+                }
+
+                @if (Model.PessoaID.HasValue)
+                {
+                    @if (this.User.GetUserId() == Model.PessoaID)
+                    {
+
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <label for="Usuario" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" asp-for="Usuario">
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <label for="senha" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="senha" asp-for="Senha">
+                        </div>
+                    }
+                }
+
+                @if (Model.TipoID < 15)
+                {
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label asp-for="Empresa" class="form-label">É empresa/PJ?</label>
+                        <select asp-for="Empresa" class="form-select">
+                            <option value="false">NÃO</option>
+                            <option value="true">SIM</option>
+                        </select>
+                    </div>
+                }
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="Ativo" class="form-label">Ativo</label>
+                    <select name="Ativo" id="Ativo" class="form-select">
+                        <option value="true">SIM</option>
+                        <option value="false">NÃO</option>
+                    </select>
+                </div>
+
+                @if (string.IsNullOrWhiteSpace(Model.FotoPerfilURL))
+                {
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label asp-for="Foto" class="form-label">Foto</label>
+                        <input type="file" id="input-foto" class="form-control" asp-for="Foto">
+                    </div>
+                }
+            </div>
+        </div>
+        <!--  Foto  -->
+        @if (!string.IsNullOrWhiteSpace(Model.FotoPerfilURL))
+        {
+            <div class="col-10 col-md-2">
+                <div class="row mb-3 justify-content-center">
+                    <div class="col">
+                        <div class="row rounded mb-1">
+                            <img src="@Model.FotoPerfilURL" style="width: 9rem;" class="rounded mt-2 w-100" />
+                        </div>
+                        <div class="row">
+                            <button type="button" id="deletar-img" class="btn btn-danger btn-sm mx-auto w-auto">
+                                <i class="fas fa-trash-can"></i>
+                            </button>
+                        </div>
+                        <input type="hidden" asp-for="FotoPerfilPublicID">
+                        <input type="hidden" asp-for="FotoPerfilURL">
+                        <input type="file" id="input-foto" class="form-control d-none">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        <h5 class="text-secondary mb-4">Dias de Estudo</h5>
+        <hr />
+        @Html.Partial("_CheckDiasDaSemana", Model)
+    </div>
+
+
+    <!--  Endereços  -->
+    @if (Model.PessoaID.HasValue)
+    {
+        <div class="row mx-auto my-3">
+            @await Component.InvokeAsync("TabelaEnderecos", new { pessoaId = Model.PessoaID, podeExcluir = true })
+        </div>
+    }
+
+    @if (Model.Enderecos.Count() > 0 && !Model.PessoaID.HasValue)
+    {
+        <div class="row align-middle py-2">
+            <div class="col-10 text-start fs-5 my-auto border-bottom pb-3 mb-3">
+                Endereço
+            </div>
+            @Model.Enderecos.First().EnderecoCompleto
+        </div>
+    }
+
+    @await Component.InvokeAsync("FormFooter", new { action = "Usuarios", controller = "Admin" })
+</form>
+
+
+<!-- Modal Add Endereço -->
+<div class="modal modal-lg fade" id="modalEndereco" tabindex="-1" aria-labelledby="modalEnderecoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="form-endereco">
+                <input type="hidden" id="Regiao" name="Regiao" />
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalEnderecoLabel">Novo Endereço</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" value="@Model.PessoaID" name="PessoaID" />
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="cep" name="CEP" placeholder=" " required>
+                                <label for="cep">CEP</label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="rua" name="Rua" placeholder=" " required>
+                                <label for="rua">Rua</label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Numero" name="Numero" required placeholder=" ">
+                                <label for="Numero">Número</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="bairro" name="Bairro" placeholder=" " required>
+                                <label for="bairro">Bairro</label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Cidade" name="Cidade" placeholder=" " required>
+                                <label for="Cidade">Cidade</label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Estado" name="Estado" placeholder=" " required>
+                                <label for="Estado">Estado</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="uf" name="UF" placeholder=" " required>
+                                <label for="Estado">UF</label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="uf" name="Complemento" placeholder=" ">
+                                <label for="Estado">Complemento</label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="uf" name="Referencia" placeholder=" ">
+                                <label for="Estado">Referência</label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <select name="TipoID" class="form-select py-3" required>
+                                <option disabled value="">TIPO</option>
+                                @await Component.InvokeAsync("DropEnderecosTipos")
+                            </select>
+                        </div>
+                    </div>
+                    @await Component.InvokeAsync("FormFooter", new { action = "", controller = "" })
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/consulta-cep.js" asp-append-version="true"></script>
+    <script>
+        $('#foto').on('click', function(){
+            $('#input-foto').click()
+        })
+
+        $('#form-endereco').submit(function (evt) {
+            fn_submit(evt, 'form-endereco', '@Url.Action("AdicionarEndereco", "Usuario")', '@Url.Action("Editar", "Usuario", new { pessoaId = Model.PessoaID })', false)
+        });
+
+        $('#btnSalvar').on('click', async function (evt) {
+
+            evt.preventDefault();
+
+            const input = document.getElementById("input-foto");
+            if(input)
+            {
+                const file = input.files[0];
+
+                if (file) {
+                    const resizedBlob = await redimensionarImagem(file, 600, 0.8);
+
+                    // substitui o arquivo do input pelo redimensionado
+                    const newFile = new File([resizedBlob], file.name, { type: 'image/jpeg' });
+
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(newFile);
+                    input.files = dataTransfer.files;
+                }
+            }
+
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Cadastro", "Usuario")', btnSelector = '#btnSalvar')
+        });
+
+
+        $(document).on('click', '#deletar-img', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: "Realmente deseja deletar este registro?",
+                showDenyButton: true,
+                denyButtonText: "Não",
+                confirmButtonText: "Sim",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                     fn_submit3(e, 'form-cadastro', '@Url.Action("DeletarImagem", "Usuario")', '@Url.Action("Usuarios", "Admin")', tipo = "salvar", true)
+                }
+            })
+        })
+
+        // function deletarImagem() {
+        //     var form = document.getElementById('form-cadastro');
+        //     var formData = new FormData(form);
+
+        //     $.ajax({
+        //         url: '/Usuario/DeletarImagem',
+        //         type: 'POST',
+        //         data: formData, // obrigatório para enviar img, não pode serializar como os outros
+        //         processData: false, // obrigatório para enviar img
+        //         contentType: false, // obrigatório para enviar img
+        //         headers: {
+        //             'X-Requested-With': 'XMLHttpRequest'
+        //         },
+        //         beforeSend: function () {
+        //             $('#btnSalvar').prop('disabled', true);
+        //         },
+        //         complete: function () {
+        //             $('#btnSalvar').prop('disabled', false);
+        //         }
+        //     })
+        //     .done(function (response) {
+        //         if (response.success) {
+        //             window.location.reload();
+        //         }
+        //     })
+        //     .fail(function (xhr) {
+        //         if (xhr.responseJSON) {
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: xhr.responseJSON.title ?? 'Erro',
+        //                 html: xhr.responseJSON.detail
+        //             });
+        //         } else {
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Erro',
+        //                 text: 'Erro inesperado ao processar a requisição.'
+        //             });
+        //         }
+        //     });
+        // };
+
+    </script>
+}

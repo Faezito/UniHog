@@ -1,0 +1,126 @@
+﻿@model UsuarioRQModel
+
+@{
+    ViewData["Title"] = "Estudo em casa";
+}
+
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>
+
+<div class="row justify-content-end">
+    <div class="col justify-content-end text-end">
+        <form class="" id="pesquisar">
+            <div class="row">
+                <div class="col-12 col-lg-4 text-center text-lg-start mt-auto">
+                    <h3 class="text-secondary text-sm-start text-center mt-2">ESTUDO EM CASA</h3>
+                </div>
+                <div class="col-12 col-lg-4 d-flex gap-2 ms-auto">
+                    <div class="col-6">
+                        <label asp-for="NomeCompleto" class="form-label-sm w-100 text-start">Nome</label>
+                        <input type="text" Name="NomeCompleto" id="NomeCompleto" class="form-control form-control-sm w-100" placeholder="Pesquisar" />
+                    </div>
+                    <div class="col-6">
+                        <label asp-for="Bairro" class="form-label-sm w-100 text-start">Bairro</label>
+                        <select asp-for="Bairro" class="form-select form-select-sm w-100">
+                            <option selected value="">BAIRRO</option>
+                            @await Component.InvokeAsync("DropBairros")
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4 d-flex justify-content-between mt-3 mt-lg-0">
+                    <button type="submit" class="btn btn-secondary btn-sm w-30 mt-auto">Pesquisar</button>
+                    <a role="button" class="btn btn-primary btn-sm w-30 mt-auto" asp-action="Cadastro" asp-controller="Usuario">
+                        <i class="fa-solid fa-user-plus"></i>&nbsp; NOVO
+                    </a>
+                    <a asp-controller="Menu" asp-action="Professor" class="btn btn-secondary btn-sm w-30 mt-auto">
+                        <i class="fa-solid fa-reply"></i>&nbsp;
+                        Voltar
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr class="my-3" />
+
+<div id="tabela-pessoas">
+</div>
+
+<div id="area-modal"></div>
+
+
+@section Scripts {
+    <script>
+        $('#pesquisar').on('submit', function (e) {
+            e.preventDefault()
+            carregarTabela();
+        });
+
+        $(document).ready(function (){
+            carregarTabela();
+        })
+
+        $("#NomeCompleto").on('keyup', function () {
+            carregarTabela();
+        });
+
+        let timeout = null;
+
+        $("#NomeCompleto").on('keyup', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                carregarTabela();
+            }, 300);
+        });
+
+        function carregarTabela() {
+            const titulo = $('#NomeCompleto').val();
+
+            $.ajax({
+                url: '/Professor/ListarAlunos',
+                type: 'POST',
+                dataType: 'html',
+                data: $('#pesquisar').serialize(),
+
+                beforeSend: function () {
+                },
+
+                success: function (resultado) {
+                    $("#tabela-pessoas").html(resultado);
+                },
+
+                complete: function () {
+                },
+
+                error: function () {
+                }
+            });
+        }
+
+        function formulario(id) {
+            window.location.assign('/Professor/Formulario?id=' + id);
+        }
+
+        $(document).on('click', 'btn-deletar', function(e){
+            e.preventDefault();
+             const form = $(this).closest("form");
+
+             Swal.fire({
+                title: "Realmente deseja reiniciar a senha deste usuário?",
+                showDenyButton: true,
+                denyButtonText: "Não",
+                confirmButtonText: "Sim"
+             }).then((result) => {
+                 if(result.isConfirmed){
+                     form.trigger("submit");
+                 }
+             })
+        })
+
+    </script>
+}
+

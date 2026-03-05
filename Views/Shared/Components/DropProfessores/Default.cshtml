@@ -1,0 +1,29 @@
+﻿@model List<UsuarioModel>
+
+@{
+    int? selecao = ViewBag.selecionado;
+}
+
+@foreach (var tipo in Model)
+{
+    if (tipo.PessoaID == selecao)
+    {
+        <option value="@tipo.PessoaID" selected>
+            @tipo.NomeCompleto
+        </option>
+    }
+    else
+    {
+        <option value="@tipo.PessoaID">
+            @tipo.NomeCompleto
+        </option>
+    }
+}
+
+
+
+@*
+
+@await Component.InvokeAsync("DropPessoasSituacoes", new { usuarioId = PessoaID })
+
+*@

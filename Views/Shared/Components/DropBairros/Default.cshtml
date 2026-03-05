@@ -1,0 +1,14 @@
+﻿@{
+    string[] bairros = ViewBag.Bairros;
+}
+
+@foreach (var bairro in bairros)
+{
+    <option value="@bairro">@bairro</option>
+}
+
+@*
+
+@await Component.InvokeAsync("DropBairros")
+
+*@

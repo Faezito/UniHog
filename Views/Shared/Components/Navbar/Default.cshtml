@@ -1,0 +1,63 @@
+﻿@model UsuarioModel
+
+<nav class="navbar navbar-dark bg-bope navbar-expand-sm navbar-toggleable-sm shadow-lg text-light box-shadow mb-3">
+    <div class="container-fluid">
+        @* <img src="./img/icon.png" style="width: 10px; height: 10px;" /> *@
+        <a class="navbar-brand text-light" asp-area="" asp-controller="Menu" asp-action="Index">BOPE</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex text-light justify-content-between" data-bs-theme="dark">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-light" asp-controller="Menu" asp-action="Index">MENU</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" asp-controller="DevTools" asp-action="Chamado">RELATAR PROBLEMA</a>
+                </li>
+            </ul>
+            <div class="nav-item col-3 text-end me-3">
+                @if (Model?.PessoaID == null)
+                {
+                    <a class="ms-3 text-light" asp-area="" asp-controller="Usuario" asp-action="Cadastro">Cadastre-se</a>
+                    <a class="ms-3 text-light" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                }
+                else
+                {
+                    @if (Model != null)
+                    {
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @Model.NomeCompleto.Split(" ")[0]
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-center dropdown-menu-md-end bg-dark dropdown-menu-dark">
+                                <a class="dropdown-item"
+                                       role="button"
+                                       asp-controller="Usuario"
+                                       asp-action="Editar"
+                                       asp-route-pessoaId="@this.User.GetUserId()">
+                                    <li>
+                                        Perfil
+                                    </li>
+                                </a>
+
+                                @if (Model.TipoID <= 1)
+                                {
+                                    <a class="dropdown-item" role="button" asp-controller="Menu" asp-action="Configuracoes">
+                                        <li>
+                                            Painel Administrativo
+                                        </li>
+                                    </a>
+                                }
+                                <form asp-controller="Home" asp-action="Logout" method="post">
+                                    <button type="submit" class="w-100 text-start btn p-0 ps-3">Sair</button>
+                                </form>
+                            </ul>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</nav>

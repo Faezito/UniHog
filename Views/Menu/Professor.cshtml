@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "Professor";
+}
+
+<div class="container-fluid">
+
+    <div class="">
+        @await Component.InvokeAsync("TopoMenus", new { menu = "Professor", rota = @Url.Action("Index", "Menu") })
+    </div>
+
+    <hr class="mb-4" />
+
+    @if (this.User.GetSenhaTemp())
+    {
+        @await Html.PartialAsync("_alertaTrocarSenha")
+    }
+
+    <div class="row justify-content-center gap-3">
+        <div id="btn-ajuda" data-bs-toggle="modal" data-bs-target="#modalAjuda">
+            <i class="fa-solid fa-question"></i>
+        </div>
+
+
+        <!-- CADASTRO INTERESSADO -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a asp-action="Cadastro" asp-controller="Interessado">
+                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                    <div class="card-body text-center">
+                        <h1>
+                            <i class="fa-solid fa-user-plus"></i>
+                        </h1>
+                        <h6 class="card-title text-uppercase mt-auto text-secondary">NOVO INTERESSADO</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Aula -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a asp-action="Agenda" asp-controller="Professor">
+                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                    <div class="card-body text-center">
+                        <h1>
+                            <i class="fa-solid fa-clipboard-list"></i>
+                        </h1>
+                        <h6 class="card-title text-uppercase mt-auto text-secondary">ESTUDO NA IGREJA</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Aula Home -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a asp-action="ChamadaEmCasa" asp-controller="Professor">
+                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                    <div class="card-body text-center">
+                        <h1>
+                            <i class="fa-solid fa-house-circle-check"></i>
+                        </h1>
+                        <h6 class="card-title text-uppercase mt-auto text-secondary">ESTUDO EM CASA</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Presenças -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a asp-action="Presencas" asp-controller="Professor">
+                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
+                    <div class="card-body text-center">
+                        <h1>
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </h1>
+                        <h6 class="card-title text-uppercase mt-auto text-secondary">PRESENÇAS</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal Ajuda -->
+<div class="modal modal-lg fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Ajuda
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section class="border-bottom mb-3">
+                    <h5>
+                        NOVO INTERESSADO
+                    </h5>
+                    <p class="fs-7">
+                        Formulário de cadastro inicial de pessoas que participam de qualquer projeto.
+                    </p>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        ESTUDO NA IGREJA
+                    </h5>
+                    <p class="fs-7">
+                        Chamada para estudo na igreja.
+                    </p>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        ESTUDO EM CASA
+                    </h5>
+                    <p class="">
+                        Formulário de Chamada para pessoas que receberam ou não o estudo em casa.
+                    </p>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>
+                        PRESENÇAS
+                    </h5>
+                    <p>
+                        Relatório de presenças em todos os Estudos bíblicos.
+                    </p>
+                </section>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿@model ChamadoModel
+
+@{
+    ViewData["Title"] = "Novo Chamado";
+}
+
+<div class="d-none d-sm-inline">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "Novo Chamado", rota = @Url.Action("Login", "Home") })
+</div>
+
+<hr class="mb-4" />
+
+<form method="post" id="form-cadastro" enctype="multipart/form-data">
+    <div class="row justify-content-center">
+        <div class="col-10">
+
+            <div class="row mb-3 gy-3">
+                <div class="col-12">
+                    <label asp-for="titulo" class="form-label">Título</label>
+                    <input type="text" asp-for="titulo" class="form-control">
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="descricao" class="form-label">Descrição</label>
+                    <textarea type="text" class="form-control" asp-for="descricao" placeholder="Relate o problema">
+                        </textarea>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="prioridade" class="form-label">Tipo</label>
+                    <select asp-for="prioridade" class="form-select" required>
+                        <option selected value="">SELECIONE</option>
+                        <option class="text-danger" value="1">Alta (Impossibilita a operação/trabalho)</option>
+                        <option class="text-warning" value="2">Média (Afeta alguns usuários/situações, mas dá para "tapear")</option>
+                        <option class="text-secondary" value="3">Baixa (dúvidas, defeitos visuais/alinhamento, não impede a operação)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("FormFooter", new { action = "MovimentacoesFinanceiras", controller = "Financeiro" })
+
+</form>
+
+@section Scripts {
+    <script>
+        $('#btnSalvar').on('click', async function (evt) {
+
+            evt.preventDefault();
+
+            // const input = document.getElementById("input-imagem");
+            // const file = input.files[0];
+
+            // if (file) {
+            //     const resizedBlob = await redimensionarImagem(file, 1000, 1, false);
+
+            //     // substitui o arquivo do input pelo redimensionado
+            //     const newFile = new File([resizedBlob], file.name, { type: 'image/jpeg' });
+
+            //     const dataTransfer = new DataTransfer();
+            //     dataTransfer.items.add(newFile);
+            //     input.files = dataTransfer.files;
+            // }
+
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Chamado", "DevTools")', btnSelector = '#btnSalvar')
+        });
+    </script>
+}
+

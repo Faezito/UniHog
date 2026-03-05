@@ -1,0 +1,84 @@
+﻿@model UsuarioModel;
+@{
+    ViewData["Title"] = "Recuperar senha";
+}
+
+<div class="row">
+    <form class="form-control w-auto mx-auto" id="form-recuperar">
+        <div class="text-center">
+            <h3 class="mb-4 mt-3">
+                Recuperar Senha
+            </h3>
+            <div class="input-group mb-2">
+                <label for="email" class="input-group-text">Email</label>
+                <input type="text" class="form-control" name="email" />
+                <span asp-validation-for="Email"></span>
+                <button type="button" id="recuperar-senha" class="btn btn-primary">
+                    <span id="texto-salvar">
+                        Enviar código
+                    </span>
+                    <span id="loading" style="display:none; text-align:center;" class="spinner-border spinner-border-sm" role="status"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+            //todo: testar
+            $(document).on('click','#recuperar-senha', function(e){
+            e.preventDefault();
+
+            const form = $(this).closest("form");
+
+            Swal.fire({
+                title: "Realmente deseja resetar sua senha? Esta ação é irreversível.",
+                showDenyButton: true,
+                denyButtonText: "Não",
+                confirmButtonText: "Sim",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Home/RecuperarSenha',
+                        type: 'POST',
+                        data: $('#form-recuperar').serialize(),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        beforeSend: function () {
+                            $("#loading").show();
+                            $("#texto-salvar").hide();
+                            $('#btnSalvar').prop('disabled', true);
+                        },
+                        complete: function () {
+                            $("#loading").hide();
+                            $("#texto-salvar").show();
+                            $('#btnSalvar').prop('disabled', false);
+                        }
+                    })
+                    .done(function (response) {
+                        if (response.success) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    })
+                    .fail(function (xhr) {
+                        if (xhr.responseJSON) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: xhr.responseJSON.title ?? 'Erro',
+                                html: xhr.responseJSON.detail
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Erro',
+                                text: 'Erro inesperado ao processar a requisição.'
+                            });
+                        }
+                    });
+            }
+        })
+        })
+    </script>
+}

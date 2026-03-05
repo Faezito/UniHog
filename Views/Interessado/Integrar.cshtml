@@ -1,0 +1,172 @@
+﻿@model UsuarioModel;
+@{
+    ViewData["Title"] = "Integração de interessado";
+}
+
+<div class="d-none d-sm-inline">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "Cadastro de Usuário", rota = @Url.Action("Index", "Interessado") })
+</div>
+
+<hr class="mb-4" />
+
+<form method="post" id="form-cadastro" enctype="multipart/form-data">
+    <input type="hidden" asp-for="PessoaID" />
+    <input type="hidden" asp-for="interessadoId" />
+    <input type="hidden" asp-for="ProjetoIndicacaoID" />
+    <input type="hidden" asp-for="Usuario" />
+
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <!--  Nome, Email e CPF  -->
+            <div class="row mb-3 gy-3">
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="floatingNome">Nome Completo</label>
+                    <input type="text" class="form-control" id="floatingNome" asp-for="NomeCompleto" required>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="floatingEmail">Email</label>
+                    <input type="email" class="form-control" id="floatingEmail" asp-for="Email">
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="cpf">CPF</label>
+                    <input type="text" class="form-control cpf" id="cpf" asp-for="CPF">
+                </div>
+
+
+                <!--  Nascimento, Tel e Genero  -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="floatingNascimento">Data de Nascimento</label>
+                    <input type="text" class="form-control date" id="floatingNascimento" asp-for="DataNascimento" required>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="telefone">Telefone</label>
+                    <input type="text" class="form-control tel_com_ddd" id="telefone" asp-for="Telefone">
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Genero">Gênero</label>
+                    <select asp-for="Genero" class="form-select">
+                        <option value="" disabled>GENERO</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+
+                <!--  Tipo, Estudo e Projeto  -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="Tipo">Cargo</label>
+                    <select asp-for="TipoID" class="form-select">
+                        <option value="" disabled>SELECIONE</option>
+                        @await Component.InvokeAsync("DropUsuariosTipos", new { usuarioId = this.User.GetUserId() })
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="EstudoBiblico">Estudo Biblico</label>
+                    <select asp-for="EstudoID" class="form-select">
+                        <option value="" disabled>SELECIONE</option>
+                        @await Component.InvokeAsync("DropEstudos")
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="SituacaoID">Situação</label>
+                    <select asp-for="SituacaoID" class="form-select">
+                        <option disabled selected>SELECIONE</option>
+                        @await Component.InvokeAsync("DropPessoasSituacoes")
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label for="floatingNascimento">Quem cadastrou</label>
+                    <input type="text" class="form-control" asp-for="Professor" value="@Model.Professor" readonly>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4">
+                    <label asp-for="ProfessorID">Professor</label>
+                    <select asp-for="ProfessorID" class="form-select">
+                        <option value="" disabled>SELECIONE</option>
+                        @await Component.InvokeAsync("DropProfessores")
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <!--  Foto  -->
+        <div class="col-10 col-md-2">
+            <div class="row mb-3 justify-content-center">
+                <div class="col">
+                    @if (!string.IsNullOrWhiteSpace(Model.FotoPerfilURL))
+                    {
+                        <div class="row rounded mb-1">
+                            <img src="@Model.FotoPerfilURL" style="width: 9rem;" class="rounded mt-2 w-100" />
+                        </div>
+                        <div class="row">
+                            <button type="button" id="deletar-img" class="btn btn-danger btn-sm mx-auto w-auto">
+                                <i class="fas fa-trash-can"></i>
+                            </button>
+                        </div>
+                        <input type="hidden" asp-for="FotoPerfilPublicID">
+                        <input type="hidden" asp-for="FotoPerfilURL">
+                    }
+                    else
+                    {
+                        <img src="/img/users/foto_placeholder.png" id="foto" style="width: 9rem; cursor: pointer;" class="rounded-1 mt-2 w-100">
+                        <input type="file" id="input-foto" class="form-control d-none" asp-for="Foto" placeholder=" ">
+                        <br />
+                        <label asp-for="Foto" class="form-label text-center w-100">Foto</label>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5 class="text-secondary mb-4">Dias de Estudo</h5>
+        <hr />
+        @Html.Partial("_CheckDiasDaSemana", Model)
+    </div>
+
+    <div class="row align-middle py-2">
+        <div class="col-10 text-start fs-5 my-auto border-bottom pb-3 mb-3">
+            Endereço
+        </div>
+        @Model.Enderecos.First().EnderecoCompleto
+    </div>
+
+    @await Component.InvokeAsync("FormFooter", new { action = "Index", controller = "Interessado" })
+</form>
+
+@section Scripts {
+    <script src="~/js/consulta-cep.js" asp-append-version="true"></script>
+    <script>
+        $('#foto').on('click', function(){
+            $('#input-foto').click()
+        })
+
+        $('#form-endereco').submit(function (evt) {
+            fn_submit(evt, 'form-endereco', '@Url.Action("AdicionarEndereco", "Usuario")', '@Url.Action("Editar", "Usuario", new { pessoaId = Model.PessoaID })', false)
+        });
+
+        $('#btnSalvar').on('click', function (evt) {
+            fn_submit4(evt, 'form-cadastro', '@Url.Action("Integrar", "Interessado")', btnSelector = '#btnSalvar')
+        });
+
+
+        $(document).on('click', '#deletar-img', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: "Realmente deseja deletar este registro?",
+                showDenyButton: true,
+                denyButtonText: "Não",
+                confirmButtonText: "Sim",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                     fn_submit3(e, 'form-cadastro', '@Url.Action("DeletarImagem", "Usuario")', '@Url.Action("Usuarios", "Admin")', tipo = "salvar", true)
+                }
+            })
+        })
+    </script>
+}
