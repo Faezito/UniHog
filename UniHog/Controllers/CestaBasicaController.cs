@@ -84,7 +84,7 @@ namespace UniHog.Controllers
         {
             try
             {
-                List<CestaBasicaBeneficiarioModel> lst = await _cestaBasicaSE.ListarBeneficiarios(null);
+                List<CestaBasicaBeneficiarioModel> lst = await _cestaBasicaSE.ListarBeneficiarios(null, false);
 
                 return View(lst);
             }

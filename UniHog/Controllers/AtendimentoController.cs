@@ -137,7 +137,6 @@ namespace UniHog.Controllers
             {
                 model.DataCriacao = DateTime.Now;
                 model.UsuarioLogado = this.User.GetUserId();
-                model.DataAtendimento = model.Data.Date + model.Hora;
 
                 if (model.DataAtendimento < DateTime.Now)
                     throw new Exception("Data inválida.");

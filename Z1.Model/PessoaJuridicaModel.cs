@@ -29,6 +29,7 @@
         public string? EnderecoReduzido { get; set; }
         public string? EnderecoCompleto { get; set; }
         public string? Registro { get; set; }
+        public List<Funcionamento>? Funcionamento { get; set; }
     }
 
 

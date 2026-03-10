@@ -21,7 +21,7 @@ namespace UniHog.Controllers
             var lst = await _usuarios.Listar(2, null);
             List<AtendimentoModel> atendimentos = lst.Select(u => new AtendimentoModel
             {
-                Paciente = u
+                NomeCompleto = u.NomeCompleto
             }).ToList();
 
             ViewBag.DiasDaSemana = diasSemana;

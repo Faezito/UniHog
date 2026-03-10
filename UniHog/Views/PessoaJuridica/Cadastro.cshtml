@@ -80,29 +80,11 @@
 
 <form method="post" id="form-cadastro" enctype="multipart/form-data">
     <input type="hidden" asp-for="PessoaJuridicaID" />
-    <input type="hidden" id="Regiao" asp-for="Endereco.Regiao" />
 
     <div class="row justify-content-center">
         <div class="col-10">
             <!--  Nome, Email e CPF  -->
             <div class="row mb-3 gy-3">
-
-                @if (Model.PessoaID.HasValue)
-                {
-                    <input type="hidden" asp-for="PessoaID" />
-                    <div class="col-12 col-sm-6 col-md-4">
-                        <label>Responsável</label>
-                        <input type="text" class="form-control" asp-for="Pessoa" readonly disabled>
-                    </div>
-                }
-                else
-                {
-                    <div class="col-12 col-sm-6 col-md-4">
-                        <label asp-for="PessoaID">Responsável</label>
-                        <select id="UsuarioId" asp-for="PessoaID" class="form-control" style="width:100%"></select>
-                    </div>
-                }
-
                 <div class="col-12 col-sm-6 col-md-4">
                     <label asp-for="NomeFantasia">Nome Fantasia</label>
                     <input type="text" class="form-control" asp-for="NomeFantasia" required>
@@ -193,58 +175,48 @@
 
             <div class="row justify-content-center gy-3 mb-3">
                 <div class="col-12 col-sm-6 col-md-4">
-                    <label for="cep">Usar o mesmo endereço da pessoa?</label>
-
-                    <input type="checkbox"
-                           class="form-check-input"
-                           id="MesmoEndereco"
-                           asp-for="MesmoEndereco" />
-                </div>
-
-
-                <div class="col-12 col-sm-6 col-md-4">
                     <label for="cep">CEP</label>
-                    <input type="text" class="form-control endereco" id="cep" asp-for="Endereco.CEP">
+                    <input type="text" class="form-control endereco" id="cep" asp-for="CEP">
                 </div>
 
                 <div class="col-12 col-sm-6 col-md-4">
                     <label for="rua">Rua</label>
-                    <input type="text" class="form-control endereco" id="rua" asp-for="Endereco.Rua">
+                    <input type="text" class="form-control endereco" id="rua" asp-for="Rua">
                 </div>
 
                 <div class="col-12 col-sm-6 col-md-4">
                     <label for="Numero">Número</label>
-                    <input type="text" class="form-control endereco" id="Numero" asp-for="Endereco.Numero">
+                    <input type="text" class="form-control endereco" id="Numero" asp-for="Numero">
                 </div>
 
                 <div class="col-12 col-sm-6 col-md-4">
                     <label for="bairro">Bairro</label>
-                    <input type="text" class="form-control endereco" id="bairro" asp-for="Endereco.Bairro">
+                    <input type="text" class="form-control endereco" id="bairro" asp-for="Bairro">
                 </div>
 
                 <div class="col-12 col-sm-6 col-md-4">
                     <label for="Cidade">Cidade</label>
-                    <input type="text" class="form-control endereco" id="Cidade" asp-for="Endereco.Cidade">
+                    <input type="text" class="form-control endereco" id="Cidade" asp-for="Cidade">
                 </div>
 
                 <div class="col-12 col-sm-6 col-md-4">
                     <label for="Estado">Estado</label>
-                    <input type="text" class="form-control endereco" id="Estado" asp-for="Endereco.Estado">
+                    <input type="text" class="form-control endereco" id="Estado" asp-for="Estado">
                 </div>
 
                 <div class="col-12 col-sm-6 col-md-4">
                     <label for="Estado">UF</label>
-                    <input type="text" class="form-control endereco" id="uf" asp-for="Endereco.UF">
+                    <input type="text" class="form-control endereco" id="uf" asp-for="UF">
                 </div>
 
                 <div class="col-12 col-sm-6 col-md-4">
                     <label for="Estado">Complemento</label>
-                    <input type="text" class="form-control endereco" id="uf" asp-for="Endereco.Complemento">
+                    <input type="text" class="form-control endereco" id="uf" asp-for="Complemento">
                 </div>
 
                 <div class="col-12 col-sm-6 col-md-4">
                     <label for="Estado">Referência</label>
-                    <input type="text" class="form-control endereco" id="uf" asp-for="Endereco.Referencia">
+                    <input type="text" class="form-control endereco" id="uf" asp-for="Referencia">
                 </div>
             </div>
         </div>

@@ -12,38 +12,6 @@
 
     <div class="row justify-content-center gap-3 mb-5">
 
-        <!-- CADASTRO INTERESSADO -->
-        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-            <a asp-action="Cadastro" asp-controller="Interessado">
-                <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
-                    <div class="card-body text-center">
-                        <h1>
-                            <i class="fa-solid fa-user-plus"></i>
-                        </h1>
-                        <h6 class="card-title text-uppercase mt-auto text-secondary">NOVO INTERESSADO</h6>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <!-- CESTA BÁSICA -->
-        @if (this.User.GetUserTipoId() < 5)
-        {
-            <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                <a asp-controller="Menu" asp-action="CestaBasica">
-                    <div class="card card-menu shadow py-3" style="min-width: 11rem; height: 10rem">
-                        <div class="card-body text-center">
-                            <h1>
-                                <i class="fa-solid fa-basket-shopping"></i>
-                            </h1>
-                            <h6 class="card-title text-uppercase mt-3 text-secondary">CESTA BÁSICA</h6>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        }
-
-
         <!-- PROFESSOR -->
         @if (this.User.GetUserTipoId() < 6)
         {

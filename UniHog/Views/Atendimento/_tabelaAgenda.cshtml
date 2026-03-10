@@ -26,12 +26,11 @@
                     <h6 class="text-center mt-4">SEM AGENDAMENTOS</h6>
                 }
                 <table class="table table-borderless">
-                    @foreach (var item in Model.Where(x => x.DiaID == dia.DiaID).OrderBy(x => x.Paciente).ThenBy(x=>x.Data).ToList())
+                    @foreach (var item in Model.Where(x => x.DiaID == dia.DiaID).OrderBy(x => x.NomeCompleto).ThenBy(x=>x.DataAtendimento).ToList())
                     {
                         <tr class="border-bottom-1">
-                            <td class="text-start align-middle col-2">@item.DataAtendimento.ToString("HH:mm")</td>
-                            <td class="text-start align-middle col-2">@item.Data.ToString("dd/MM")</td>
-                            <td class="text-start align-middle col-8">@item.Paciente.NomeCompleto</td>
+                            <td class="text-start align-middle col-2">@item.DataAtendimento?.ToString("dd/MM HH:mm")</td>
+                            <td class="text-start align-middle col-8">@item.NomeCompleto</td>
                         </tr>
                     }
                 </table>

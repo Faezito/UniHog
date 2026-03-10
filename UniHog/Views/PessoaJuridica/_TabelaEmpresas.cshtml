@@ -17,7 +17,6 @@ else
                 <td class="text-center text-uppercase">Contato</td>
                 <td class="text-center text-uppercase">Situação</td>
                 <td class="text-center text-uppercase">Endereço</td>
-                <td class="text-center text-uppercase">Bairro</td>
                 <td class="text-center text-uppercase">Editar</td>
             </tr>
         </thead>
@@ -40,8 +39,7 @@ else
                         </ul>
                     </td>
                     <td class="align-middle fs-6 @item.SituacaoCor">@item.Situacao</td>
-                    <td class="align-middle fs-6 text-secondary" onclick="abrirModal(@item.PessoaJuridicaID)">@item.Endereco?.EnderecoReduzido</td>
-                    <td class="align-middle fs-6 text-secondary" onclick="abrirModal(@item.PessoaJuridicaID)">@item.Endereco?.Bairro</td>
+                    <td class="align-middle fs-6 text-secondary" onclick="abrirModal(@item.PessoaJuridicaID)">@item.Endereco</td>
                     <td class="p-1 m-0 align-middle text-center">
                         <a asp-controller="PessoaJuridica" asp-action="Editar" asp-route-pessoajuridicaId="@item.PessoaJuridicaID" class="btn btn-secondary btn-sm">
                             <i class="fa-solid fa-pencil"></i>

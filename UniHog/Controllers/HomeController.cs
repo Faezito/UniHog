@@ -11,7 +11,6 @@ using UniHog.Extensions;
 
 namespace UniHog.Controllers
 {
-    [Autorizacoes]
     public class HomeController : Controller
     {
         private readonly IUsuarioServicos _seUsuario;
@@ -132,7 +131,7 @@ namespace UniHog.Controllers
                 }
                 else if (user.TipoID == 10)
                 {
-                    Json(new { success = true, redirectUrl = Url.Action("Cadastro", "Interessado") });
+                    return Json(new { success = true, redirectUrl = Url.Action("Cadastro", "Interessado") });
                 }
                 return Json(new { success = true, redirectUrl = Url.Action("AtendimentosSociais", "Menu") });
             }

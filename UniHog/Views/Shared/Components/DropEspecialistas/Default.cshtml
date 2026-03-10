@@ -8,7 +8,7 @@
     <optgroup label="@x.Especialidade" />
     @foreach (var item in Model.Where(m => m.EspecialidadeID == x.EspecialidadeID))
     {
-        <option value="@item.PessoaID">@item.Pessoa</option>
+        <option value="@item.EspecialidadeID">@item.NomeFantasia</option>
     }
 }
 

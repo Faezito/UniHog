@@ -2,7 +2,9 @@ using UniHog.Libraries.Login;
 using UniHog.Libraries.Sessao;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
+using Serilog;
 using System.Data.Common;
+using System.Globalization;
 using Z1.Model;
 using Z2.Services.Externo;
 using Z2.Servicos;
@@ -13,6 +15,9 @@ using Z3.DataAccess.Database;
 using Z3.DataAccess.Externo;
 
 var builder = WebApplication.CreateBuilder(args);
+var culture = new CultureInfo("pt-BR");
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 
@@ -30,6 +35,21 @@ builder.Services.AddAuthentication(options =>
     options.ExpireTimeSpan = TimeSpan.FromHours(8);
     options.SlidingExpiration = true;
 });
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File(
+        path: "Logs/log-.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+    )
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+
 //.AddGoogle(googleOptions =>
 //{
 //    googleOptions.ClientId = builder.Configuration["GoogleAuth:ClientId"];
@@ -117,6 +137,7 @@ builder.Services.AddScoped<IClientFactoryGet, ClientFactoryGet>();
 builder.Services.AddScoped<IClientFactoryDelete, ClientFactoryDelete>();
 builder.Services.AddScoped<IChamadoServicos, ChamadoServicos>();
 builder.Services.AddScoped<IChamadoDataAccess, ChamadoDataAccess>();
+builder.Services.AddScoped<ILimparTabelas, LimparTabelas>();
 
 
 //// Configurações de sessão

@@ -216,7 +216,7 @@ input:required:invalid, select:required:invalid {
     background-color: var(--lightgray);
 }
 
-.bg-bope {
+.bg-main {
     background-color: var(--vinhoclaro);
 }
 
@@ -418,4 +418,12 @@ ul, li {
 .table-backgroundless th,
 .table-backgroundless td {
     background-color: transparent !important;
+}
+
+.form-floating > .form-control:focus ~ label::after,
+.form-floating > .form-control:not(:placeholder-shown) ~ label::after,
+.form-floating > .form-control-plaintext ~ label::after,
+.form-floating > .form-select ~ label::after {
+    background-color: transparent !important;
+    color: black;
 }

@@ -1,9 +1,3 @@
 ﻿@{
-    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
-    var action = ViewContext.RouteData.Values["action"]?.ToString();
-
-    if (controller == "Home" && action == "Login")
-        Layout = "_LayoutLogin";
-    else
-        Layout = "_Layout";
+    Layout = "_Layout";
 }

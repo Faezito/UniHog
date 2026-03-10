@@ -56,8 +56,6 @@ namespace UniHog.Controllers
                     UsuarioModel model = await _usuarios.Obter(id, null);
                     List<PessoaJuridicaModel> empresas = await _pj.Listar(new PessoaJuridicaRQModel { PessoaID = model.PessoaID });
                     empresa = empresas.FirstOrDefault() ?? new();
-                    empresa.PessoaID = model.PessoaID;
-                    empresa.Pessoa = model.NomeCompleto;
                 }
 
                 return View(empresa);
@@ -73,7 +71,7 @@ namespace UniHog.Controllers
         {
             try
             {
-                PessoaJuridicaModel empresa = await _pj.Obter(pessoajuridicaId, null);
+                PessoaJuridicaModel empresa = await _pj.Obter(pessoajuridicaId);
                 return View("Cadastro", empresa);
             }
             catch (Exception ex)
@@ -93,22 +91,6 @@ namespace UniHog.Controllers
                 model.DataAlteracao = DateTime.Now;
 
                 var validarEmpresa = Validacoes.ValidarEmpresa(model);
-                if (!validarEmpresa.valido)
-                    return Problem(title: "Erro", detail: validarEmpresa.mensagem);
-
-                if (model.MesmoEndereco)
-                {
-                    var enderecos = await _enderecos.ListarEnderecosDoUsuario(model.PessoaID.Value);
-                    model.Endereco = enderecos.FirstOrDefault();
-                }
-                else
-                {
-                    var validarEndereco = Validacoes.ValidarEndereco(model.Endereco);
-                    if (!validarEndereco.valido)
-                        return Problem(title: "Erro", detail: validarEndereco.mensagem);
-                }
-
-                model.Endereco.TipoID = 3;
 
                 if (!string.IsNullOrWhiteSpace(model.CNPJ))
                     model.CNPJ = ManipularModels.LimparNumeros(model.CNPJ);
@@ -127,7 +109,7 @@ namespace UniHog.Controllers
         {
             try
             {
-                PessoaJuridicaModel model = await _pj.Obter(id, null);
+                PessoaJuridicaModel model = await _pj.Obter(id);
                 return PartialView("_modalEmpresa", model);
             }
             catch (Exception ex)

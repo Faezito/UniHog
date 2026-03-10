@@ -27,6 +27,7 @@
         public string? Genero { get; set; }
         public string? Observacao { get; set; }
         public decimal? Custo { get; set; }
+        public int DiaID { get; set; }
     }
 
     public class DiasDaSemana
@@ -54,6 +55,7 @@
         public int? EspecialidadeID { get; set; }
         public int? AreaID { get; set; }
         public DateTime? DataIni {  get; set; }
+        public DateTime? Data {  get; set; }
         public DateTime? DataFim {  get; set; }
     }
 }
