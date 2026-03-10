@@ -22,50 +22,41 @@
 
 <div class="row justify-content-end">
     <form class="" id="pesquisar">
-        <div class="row justify-content-end">
+        <div class="row d-flex gap-2 justify-content-end">
             <div class="col-12 col-lg-2 text-center text-md-start mt-auto me-auto">
                 <h3 class="text-secondary text-sm-start text-center mt-2">Agenda @titulo</h3>
             </div>
 
-            <div class="col-12 col-lg-10 justify-content-end">
-                <div class="row justify-content-end gy-2">
-
-                    <!-- SE FOR PROFESSOR USA O ID DELE NA BUSCA, SE NÃO RENDERIZA O DROP PARA SELECIONAR -->
-                    @if (this.User.GetUserTipoId() < 4)
-                    {
-                        <div class="col-12 col-sm-4 col-md-3 col-lg-2 col-xl-4 mt-auto mb-3 mb-md-0">
-                            <label asp-for="ProfessorID" class="uh-label text-start">Professor</label>
-                            <select asp-for="ProfessorID" class="uh-select">
-                                <option selected value="">TODOS</option>
-                                @await Component.InvokeAsync("DropProfessores")
-                            </select>
-                        </div>
-                    }
-                    else
-                    {
-                        <input type="hidden" asp-for="ProfessorID" value="@prof.PessoaID" />
-                    }
-
-                    <div class="col-12 col-sm-8 col-lg-10 col-xl-8 ms-auto mt-auto">
-                        <div class="row justify-content-end gy-1">
-                            <div class="col-12 col-lg-6 d-flex gap-1 p-sm-0">
-                                <button type="button" id="btnPesquisa" class="btn-uh w-auto mt-auto">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                    Pesquisar
-                                </button>
-                            </div>
-                            <div class="col-12 col-lg-6 d-flex gap-1 p-sm-0 ps-lg-1">
-                                <button type="button" class="btn-uh-ghost w-auto" data-bs-toggle="modal" data-bs-target="#modalAjuda">
-                                    <i class="fa-solid fa-question"></i>&nbsp; AJUDA
-                                </button>
-                                <a asp-controller="Menu" asp-action="Professor" class="btn-uh w-auto mt-auto">
-                                    <i class="fa-solid fa-reply"></i>&nbsp;
-                                    Voltar
-                                </a>
-                            </div>
-                        </div>
+            <div class="col-12 col-lg-4 d-flex justify-content-end mt-auto p-0">
+                <!-- SE FOR ADMIN RENDERIZA O DROP PARA SELECIONAR -->
+                @if (this.User.GetUserTipoId() < 4)
+                {
+                    <div class="col-12 col-sm-4 col-md-3 col-lg-4 col-xl-4 mt-auto mb-3 mb-md-0">
+                        <label asp-for="ProfessorID" class="uh-label text-start">Professor</label>
+                        <select asp-for="ProfessorID" class="uh-select">
+                            <option selected value="">TODOS</option>
+                            @await Component.InvokeAsync("DropProfessores")
+                        </select>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <input type="hidden" asp-for="ProfessorID" value="@prof.PessoaID" />
+                }
+            </div>
+
+            <div class="col-12 col-sm-8 col-lg-4 mt-auto d-flex gap-2 justify-content-end p-0">
+                <button type="button" id="btnPesquisa" class="btn-uh w-100 mt-auto">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Pesquisar
+                </button>
+                <button type="button" class="btn-uh w-100" data-bs-toggle="modal" data-bs-target="#modalAjuda">
+                    <i class="fa-solid fa-question"></i>&nbsp; AJUDA
+                </button>
+                <a asp-controller="Menu" asp-action="Professor" class="btn-uh w-100 mt-auto">
+                    <i class="fa-solid fa-reply"></i>&nbsp;
+                    Voltar
+                </a>
             </div>
         </div>
     </form>
