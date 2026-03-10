@@ -158,7 +158,6 @@ body {
 }
 
 body::before {
-  content: '';
   position: fixed;
   inset: 0;
   background-image:

@@ -34,8 +34,8 @@
                     @if (this.User.GetUserTipoId() < 4)
                     {
                         <div class="col-12 col-sm-4 col-md-3 col-lg-2 col-xl-4 mt-auto mb-3 mb-md-0">
-                            <label asp-for="ProfessorID" class="form-label-sm w-100 text-start">Professor</label>
-                            <select asp-for="ProfessorID" class="form-select form-select-sm w-100">
+                            <label asp-for="ProfessorID" class="uh-label text-start">Professor</label>
+                            <select asp-for="ProfessorID" class="uh-select">
                                 <option selected value="">TODOS</option>
                                 @await Component.InvokeAsync("DropProfessores")
                             </select>
@@ -49,20 +49,16 @@
                     <div class="col-12 col-sm-8 col-lg-10 col-xl-8 ms-auto mt-auto">
                         <div class="row justify-content-end gy-1">
                             <div class="col-12 col-lg-6 d-flex gap-1 p-sm-0">
-                                <button type="button" id="btnPesquisa" class="btn btn-primary btn-sm w-100 mt-auto">
+                                <button type="button" id="btnPesquisa" class="btn-uh w-auto mt-auto">
                                     <i class="fa-solid fa-magnifying-glass"></i>
                                     Pesquisar
                                 </button>
-                                <a asp-action="ChamadaEmCasa" asp-controller="Professor" class="btn btn-success btn-sm w-100 mt-auto">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                    ESTUDO EM CASA
-                                </a>
                             </div>
                             <div class="col-12 col-lg-6 d-flex gap-1 p-sm-0 ps-lg-1">
-                                <button type="button" class="btn btn-warning btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modalAjuda">
+                                <button type="button" class="btn-uh-ghost w-auto" data-bs-toggle="modal" data-bs-target="#modalAjuda">
                                     <i class="fa-solid fa-question"></i>&nbsp; AJUDA
                                 </button>
-                                <a asp-controller="Menu" asp-action="Professor" class="btn btn-secondary btn-sm w-100 mt-auto">
+                                <a asp-controller="Menu" asp-action="Professor" class="btn-uh w-auto mt-auto">
                                     <i class="fa-solid fa-reply"></i>&nbsp;
                                     Voltar
                                 </a>
