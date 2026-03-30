@@ -1,4 +1,35 @@
 ﻿@model UsuarioModel
+@{
+    var diasSelecionados = Model?.DiasEstudoIDs ?? Array.Empty<int>();
+    var dias = new Dictionary<int, string>
+    {
+        {1, "Domingo"},
+        {2, "Segunda-feira"},
+        {3, "Terça-feira"},
+        {4, "Quarta-feira"},
+        {5, "Quinta-feira"},
+        {6, "Sexta-feira"},
+        {7, "Sábado"}
+    };
+}
+<div class="row justify-content-between d-flex mb-5 px-5">
+    @foreach (var dia in dias)
+    {
+        <div class="col-auto">
+            <label class="uh-check" for="dia-@dia.Key">
+                <input type="checkbox"
+                       name="DiasEstudoIDs"
+                       value="@dia.Key"
+                       id="dia-@dia.Key"
+                       @(diasSelecionados.Contains(dia.Key) ? "checked" : "") />
+                <div class="uh-check-label">@dia.Value</div>
+            </label>
+        </div>
+    }
+</div>
+
+
+@* @model UsuarioModel
 
 @{
     var diasSelecionados = Model?.DiasEstudoIDs ?? Array.Empty<int>();
@@ -31,3 +62,4 @@
     }
 </div>
 
+ *@

@@ -14,31 +14,31 @@
 menu = $"Chamada",
      rota = @Url.Action("Agenda", "Professor")
  })
-<h4 class="text-secondary fs-5">@dia.Dia, @hoje</h4>
-<hr />
-<form id="form-cadastro" method="post">
-    <table class="table table-hover">
+<h4 class=" uh-text-gold fs-5">@dia.Dia, @hoje</h4>
+<hr class="my-3" />
+<form id="form-cadastro" method="post" class="uh-table-wrap">
+    <table class="uh-table">
         <thead class="">
             <tr class="align-middle">
-                <td colspan="2">
-                    <label for="EstudoID">Estudo Bíblico</label>
-                    <select name="EstudoID" class="form-select form-select-sm">
+                <td colspan="2" class="pb-3 pe-4">
+                    <label for="EstudoID" class="uh-label">Turma</label>
+                    <select name="EstudoID" class="form-select uh-select">
                         <option disabled>SELECIONE</option>
                         @await Component.InvokeAsync("DropEstudos")
                     </select>
                 </td>
-                <td colspan="2">
-                    <label for="NumLicao">Número da Lição</label>
-                    <select name="NumLicao" class="form-select form-select-sm" required>
+                <td colspan="2" class="pb-3">
+                    <label for="NumLicao" class="uh-label">Número da Lição</label>
+                    <select name="NumLicao" class="uh-select" required>
                         <option disabled>LIÇÃO</option>
                         @await Html.PartialAsync("_DropLicoes", 31)
                     </select>
                 </td>
             </tr>
-            <tr>
-                <td class="text-center fw-bold col-8" colspan="2">Aluno</td>
-                <td class="text-center fw-bold col-2">Presente?</td>
-                <td class="text-center fw-bold col-2">Horário</td>
+            <tr class="">
+                <td class="text-center pt-5 fw-bold col-8 sortable" colspan="2">Aluno</td>
+                <td class="text-center pt-5 fw-bold col-2">Presente?</td>
+                <td class="text-center pt-5 fw-bold col-2">Horário</td>
             </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -62,15 +62,15 @@ menu = $"Chamada",
                             <input type="hidden" name="model[@index].ProfessorID" value="@this.User.GetUserId()" />
                             <input type="hidden" name="model[@index].DataEstudo" value="@d" />
 
-                            <td class="text-center bg-secondary-subtle align-middle">
-                                <select name="model[@index].Presente" value="model[@index].Presente" class="form-select">
+                            <td class="text-center align-middle">
+                                <select name="model[@index].Presente" value="model[@index].Presente" class="uh-select">
                                     <option value="false">Não</option>
                                     <option value="true">Sim</option>
                                 </select>
                             </td>
 
-                            <td class="bg-secondary-subtle align-middle">
-                                <input type="text" class="form-control form-control-sm mx-auto w-75 time" name="model[@index].Horario" />
+                            <td class="align-middle">
+                                <input type="text" class="uh-input mx-auto w-75 time" name="model[@index].Horario" />
                             </td>
 
                             index++;

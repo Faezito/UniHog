@@ -1,4 +1,77 @@
 ﻿@model List<EnderecoModel>
+@{
+    bool podeExcluir = ViewBag.Deletar;
+}
+
+<div class="uh-card">
+
+    <div class="uh-card-header">
+        <span class="uh-card-title">✦ Endereços</span>
+        @if (podeExcluir)
+        {
+            <button type="button"
+                    class="btn-uh btn-uh-primary btn-uh-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalEndereco">
+                <i class="bi bi-plus-lg"></i> Novo Endereço
+            </button>
+        }
+    </div>
+
+    <div class="uh-card-body p-0">
+        <div class="uh-table-wrap">
+            <table class="uh-table">
+                <thead>
+                    <tr>
+                        <th>Endereço Completo</th>
+                        <th class="text-center">CEP</th>
+                        <th>Tipo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var endereco in Model)
+                    {
+                        var enderecoCompleto = $"{endereco.Rua}, {endereco.Numero}, {endereco.Bairro}, {endereco.Cidade} - {endereco.Estado}, {endereco.CEP}";
+                        var enderecoEncoded = Uri.EscapeDataString(enderecoCompleto);
+                        var url = $"https://www.google.com/maps/search/?api=1&query={enderecoEncoded}";
+                        <tr>
+                            <td>@endereco.EnderecoCompleto</td>
+                            <td class="text-center">@endereco.CEP.FormatarCEP()</td>
+                            <td>@endereco.Tipo</td>
+                            @if (podeExcluir)
+                            {
+                                <td class="text-end">
+                                    <form asp-action="DeletarEndereco"
+                                          asp-controller="Usuario"
+                                          asp-route-enderecoId="@endereco.ID"
+                                          asp-route-pessoaId="@endereco.PessoaID">
+                                        <button type="submit" class="btn-uh btn-uh-danger btn-uh-sm btn-deletar">
+                                            <i class="fas fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-end">
+                                    <a href="@url" target="_blank" class="btn-uh btn-uh-primary btn-uh-sm">
+                                        <i class="fa-solid fa-map-location-dot"></i>
+                                    </a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+@* @model List<EnderecoModel>
 
 @{
     bool podeExcluir = ViewBag.Deletar;
@@ -17,7 +90,7 @@
         </div>
     }
 </div>
-<table class="table table-striped table-bordered border-light-subtle mb-0">
+<table class="uh-table">
     <thead>
         <tr>
             <td class="text-center">Endereço Completo</td>
@@ -58,3 +131,4 @@
         </tr>
     }
 </table>
+ *@

@@ -24,14 +24,14 @@
     <link rel="stylesheet" href="~/css/unihog.css" asp-append-version="true" />
 
 </head>
-<body class="">
+<body class="pt-5">
     <header>
         @if (controller != "Home")
         {
             @await Component.InvokeAsync("Navbar")
         }
     </header>
-    <div class="container">
+    <div class="container mt-5">
         <main role="main" class="py-3">
             @RenderBody()
         </main>

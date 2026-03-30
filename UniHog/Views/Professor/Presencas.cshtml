@@ -2,12 +2,149 @@
     ViewData["Title"] = "Listagem de Presenças";
 }
 
+<div class="uh-page-header">
+    <div>
+        <h1 class="uh-page-title">Listagem de Presenças</h1>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a asp-action="Professor" asp-controller="Menu" class="btn-uh btn-uh-ghost btn-uh-sm">
+            <i class="fa-solid fa-reply"></i> Voltar
+        </a>
+    </div>
+</div>
+
+<div class="uh-card">
+    <div class="uh-card-body">
+        <form id="pesquisar">
+            <div class="row g-3 align-items-end">
+
+                @if (this.User.GetUserTipoId() < 5)
+                {
+                    <div class="col-6 col-lg-2 col-xl">
+                        <div class="uh-form-group mb-0">
+                            <label class="uh-label" for="ProfessorID">Professor</label>
+                            <select name="ProfessorID" id="ProfessorID" class="uh-select w-100">
+                                <option selected value="">Todos</option>
+                                @await Component.InvokeAsync("DropProfessores")
+                            </select>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <input type="hidden" name="ProfessorID" value="@this.User.GetUserId()" />
+                }
+
+                <div class="col-6 col-lg-2 col-xl">
+                    <div class="uh-form-group mb-0">
+                        <label class="uh-label" for="Aluno">Aluno</label>
+                        <input name="Aluno" id="Aluno" class="uh-input w-100" />
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-2 col-xl">
+                    <div class="uh-form-group mb-0">
+                        <label class="uh-label" for="Mes">Mês</label>
+                        <select name="Mes" id="Mes" class="uh-select w-100">
+                            <option value="">Todos</option>
+                            @await Component.InvokeAsync("DropMeses", new { mes = DateTime.Now.Month.ToString() })
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-2 col-xl">
+                    <div class="uh-form-group mb-0">
+                        <label class="uh-label" for="Ano">Ano</label>
+                        <select name="Ano" id="Ano" class="uh-select w-100">
+                            @await Component.InvokeAsync("DropAnos", new { anoInicio = 2025 })
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-4 col-xl-3 d-flex gap-2">
+                    <button type="submit" class="btn-uh btn-uh-primary w-50">
+                        <i class="fa-solid fa-magnifying-glass"></i> Pesquisar
+                    </button>
+                    <a asp-action="Professor" asp-controller="Menu" class="btn-uh btn-uh-ghost w-50">
+                        <i class="fa-solid fa-reply"></i> Voltar
+                    </a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="uh-divider-ornate my-4"><span class="uh-divider-ornate-symbol">✦</span></div>
+
+<div id="tabela-presencas"></div>
+
+<div id="area-modal"></div>
+
+@section Scripts {
+    <script>
+        $('#pesquisar').on('submit', function (e) {
+            e.preventDefault()
+            carregarTabela();
+        });
+
+        $(document).ready(function (){
+            carregarTabela();
+        })
+
+        $("#Aluno").on('keyup', function () {
+            carregarTabela();
+        });
+
+        let timeout = null;
+
+        $("#Aluno").on('keyup', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                carregarTabela();
+            }, 300);
+        });
+
+        function carregarTabela() {
+            $.ajax({
+                url: '/Professor/ListarPresencas',
+                type: 'POST',
+                dataType: 'html',
+                data: $('#pesquisar').serialize(),
+
+                beforeSend: function () {
+                },
+
+                success: function (resultado) {
+                    $("#tabela-presencas").html(resultado);
+                    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+                    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                },
+
+                complete: function () {
+                },
+
+                error: function () {
+                }
+            });
+        }
+
+    </script>
+}
+
+
+
+
+@* @{
+    ViewData["Title"] = "Listagem de Presenças";
+}
+
 <div class="row justify-content-end">
     <div class="col justify-content-end text-end">
         <form class="" id="pesquisar">
             <div class="row justify-content-end">
                 <div class="col-12">
-                    <h3 class="text-secondary text-md-start text-center mt-2">LISTAGEM DE PRESENÇAS</h3>
+                    <h3 class=" uh-text-gold text-md-start text-center mt-2">LISTAGEM DE PRESENÇAS</h3>
                 </div>
                 @if (this.User.GetUserTipoId() < 5)
                 {
@@ -117,4 +254,4 @@
 
     </script>
 }
-
+ *@

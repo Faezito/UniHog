@@ -37,7 +37,7 @@ else
                         var chamada = Model.Where(x => x.PessoaID == aluno.PessoaID && x.DataEstudo?.Date == d);
                         string? tooltip = Model.Where(x => x.PessoaID == aluno.PessoaID && x.DataEstudo?.Date == d).Select(x=>x.Tooltip).FirstOrDefault();
 
-                        <td class="fs-1 border-secondary-subtle border-start text-center align-middle text-secondary @chamada.Select(x => x.PresenteCor).FirstOrDefault()"
+                        <td class="fs-1 border-secondary-subtle border-start text-center align-middle  uh-text-gold @chamada.Select(x => x.PresenteCor).FirstOrDefault()"
                             data-bs-toggle="@(string.IsNullOrWhiteSpace(tooltip) ? " " : "tooltip")" 
                             data-bs-placement="left"
                             data-bs-title="@tooltip">

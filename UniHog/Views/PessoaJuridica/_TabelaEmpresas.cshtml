@@ -26,20 +26,20 @@ else
             {
                 <tr class="lista-hover">
                     <td class="align-middle" onclick="abrirModal(@item.PessoaJuridicaID)">
-                        <ul class="list-unstyled m-0 p-0 fs-6 text-secondary">
+                        <ul class="list-unstyled m-0 p-0 fs-6  uh-text-gold">
                             <li>@item.NomeFantasia</li>
                             <li>@item.RazaoSocial</li>
                             <li>@item.CNPJ</li>
                         </ul>
                     </td>
                     <td class="align-middle" onclick="abrirModal(@item.PessoaJuridicaID)">
-                        <ul class="list-unstyled m-0 p-0 fs-6 text-secondary">
+                        <ul class="list-unstyled m-0 p-0 fs-6  uh-text-gold">
                             <li>@(item.Telefone == null ? "" : item.Telefone.FormatarTelefone())</li>
                             <li>@item.Email</li>
                         </ul>
                     </td>
                     <td class="align-middle fs-6 @item.SituacaoCor">@item.Situacao</td>
-                    <td class="align-middle fs-6 text-secondary" onclick="abrirModal(@item.PessoaJuridicaID)">@item.Endereco</td>
+                    <td class="align-middle fs-6  uh-text-gold" onclick="abrirModal(@item.PessoaJuridicaID)">@item.Endereco</td>
                     <td class="p-1 m-0 align-middle text-center">
                         <a asp-controller="PessoaJuridica" asp-action="Editar" asp-route-pessoajuridicaId="@item.PessoaJuridicaID" class="btn btn-secondary btn-sm">
                             <i class="fa-solid fa-pencil"></i>
