@@ -1,4 +1,4 @@
-﻿@{
+﻿@* @{
     ViewData["Title"] = "Menu de Cadastros";
 }
 
@@ -154,3 +154,200 @@
     </div>
 </div>
 
+ *@
+
+
+@{
+    ViewData["Title"] = "Menu de Cadastros";
+}
+
+<div class="uh-page-header">
+    @await Component.InvokeAsync("TopoMenus", new { menu = "Cadastros", ajuda = true, rota = @Url.Action("Index", "Menu") })
+</div>
+
+<div class="uh-divider-ornate mb-4"><span class="uh-divider-ornate-symbol">✦</span></div>
+
+<div class="row g-3 justify-content-center">
+
+    <!-- GESTÃO DE USUÁRIOS -->
+    <div class="col-12 col-sm-6 col-lg-4">
+        <div class="uh-card h-100">
+            <div class="uh-card-header">
+                <span class="uh-card-title">
+                    <i class="fa-solid fa-user"></i> Usuários
+                </span>
+            </div>
+            <div class="uh-card-body p-0">
+                <ul class="uh-list">
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Index" asp-controller="Interessado">Listagem de Interessados</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Cadastro" asp-controller="Usuario">Novo Usuário</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Usuarios" asp-controller="Admin" asp-route-rotaId="1">Listar Usuários</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Usuarios" asp-controller="Admin" asp-route-rotaId="2">Listar Alunos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORIAS -->
+    <div class="col-12 col-sm-6 col-lg-4">
+        <div class="uh-card h-100">
+            <div class="uh-card-header">
+                <span class="uh-card-title">
+                    <i class="fa-solid fa-layer-group"></i> Categorias
+                </span>
+            </div>
+            <div class="uh-card-body p-0">
+                <ul class="uh-list">
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="1">Categorias de Usuário</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="3">Situações de Usuário</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Index" asp-controller="Estudo">Estudos Bíblicos</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Index" asp-controller="Projeto">Projetos Sociais</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="2">Tipos de Endereço</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Lista" asp-controller="Tipo" asp-route-rotaId="4">Tipos de Movimentação Financeira</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- PESSOAS JURÍDICAS -->
+    <div class="col-12 col-sm-6 col-lg-4">
+        <div class="uh-card h-100">
+            <div class="uh-card-header">
+                <span class="uh-card-title">
+                    <i class="fa-solid fa-briefcase"></i> Pessoas Jurídicas
+                </span>
+            </div>
+            <div class="uh-card-body p-0">
+                <ul class="uh-list">
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Cadastro" asp-controller="PessoaJuridica">Nova</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Index" asp-controller="PessoaJuridica">Listar Empresas</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="Index" asp-controller="Especialidade">Especialidades</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FINANCEIRO -->
+    <div class="col-12 col-sm-6 col-lg-4">
+        <div class="uh-card h-100">
+            <div class="uh-card-header">
+                <span class="uh-card-title">
+                    <i class="fa-solid fa-money-bill-wave"></i> Financeiro
+                </span>
+            </div>
+            <div class="uh-card-body p-0">
+                <ul class="uh-list">
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="CadastroMovimentacao" asp-controller="Financeiro">Cadastrar Movimentação</a>
+                    </li>
+                    <li class="uh-list-item uh-list-item-action">
+                        <i class="bi bi-chevron-right" style="color:var(--uh-gold-700); font-size:.7rem; flex-shrink:0;"></i>
+                        <a asp-action="MovimentacoesFinanceiras" asp-controller="Financeiro">Movimentações</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Modal Ajuda — Bootstrap 5 com estilo UniHog via classe .uh -->
+<div class="modal fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg uh">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAjudaLabel">Ajuda — Menu de Cadastros</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>Menu para gestão e cadastros gerais do sistema.</p>
+
+                <section class="border-bottom mb-3">
+                    <h5>Usuários</h5>
+                    <ul>
+                        <li><strong>Listagem de Interessados</strong> — Lista as pessoas cadastradas nas pesquisas dos projetos sociais, permitindo integração com o sistema.</li>
+                        <li><strong>Novo Usuário</strong> — Cadastra um novo usuário no sistema, ou uma pessoa diretamente, sem necessidade de ser cadastrado como interessado.</li>
+                        <li><strong>Listar Usuários</strong> — Lista as pessoas cadastradas e usuários do sistema para gestão.</li>
+                    </ul>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>Categorias</h5>
+                    <ul>
+                        <li><strong>Categorias de Usuário</strong> — Cadastro e gestão de cargos de pessoas e usuários do sistema (Ex: Admin, Professor, Aluno).</li>
+                        <li><strong>Situações de Usuário</strong> — Cadastro e gestão de situações de pessoas (Ex: Ativo, Inativo, Estudando).</li>
+                        <li><strong>Estudos Bíblicos</strong> — Cadastro e gestão dos Estudos Bíblicos.</li>
+                        <li><strong>Projetos Sociais</strong> — Cadastro e gestão dos Projetos Sociais.</li>
+                        <li><strong>Tipos de Endereço</strong> — Cadastro e gestão dos Tipos de Endereço das pessoas.</li>
+                        <li><strong>Tipos de Movimentação Financeira</strong> — Cadastro e gestão dos tipos de movimentação financeira.</li>
+                    </ul>
+                </section>
+
+                <section class="border-bottom mb-3">
+                    <h5>Pessoas Jurídicas</h5>
+                    <ul>
+                        <li><strong>Nova</strong> — Cadastrar uma nova empresa/prestador de serviço (Ex: Médico, advogado).</li>
+                        <li><strong>Listar Empresas</strong> — Lista as empresas e prestadores de serviço para gestão.</li>
+                        <li><strong>Especialidades</strong> — Cadastro e gestão de especialidades das pessoas jurídicas.</li>
+                    </ul>
+                </section>
+
+                <section class="mb-3">
+                    <h5>Financeiro</h5>
+                    <ul>
+                        <li><strong>Cadastrar Movimentação</strong> — Cadastrar movimentações financeiras.</li>
+                        <li><strong>Movimentações</strong> — Lista as movimentações financeiras por mês.</li>
+                    </ul>
+                </section>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-uh btn-uh-ghost" data-bs-dismiss="modal">Fechar</button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1282,12 +1282,17 @@ blockquote, .uh-blockquote {
 /* ═══════════════════════════════════════════════════════════
    19. LISTAS & LIST GROUPS
 ═══════════════════════════════════════════════════════════ */
-.uh-list { list-style:none; padding:0; margin:0; }
+.uh-list { list-style:none; padding:15px 0; margin:0; }
 .uh-list-item {
   display:flex; align-items:center; gap:.75rem;
   padding:.75rem 1rem; border-bottom:1px solid rgba(74,58,16,.25);
   font-family: var(--uh-font-body); font-size:.97rem;
   color: var(--uh-parchment-mid); transition: background var(--uh-transition);
+}
+
+.uh-list-item > a {
+    color: var(--uh-parchment-mid);
+    transition: background var(--uh-transition);
 }
 .uh-list-item:last-child { border-bottom:none; }
 .uh-list-item:hover { background: rgba(201,168,76,.04); }
